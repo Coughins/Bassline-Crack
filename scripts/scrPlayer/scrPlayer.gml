@@ -97,6 +97,24 @@ function player_set_frozen(val) {
 	}
 }
 
+function player_reset_transition_state(inst_obj) {
+	with (inst_obj) {
+		hspeed = 0
+		vspeed = 0
+		speed = 0
+		velocity.set(0, 0)
+		hvelocity.set(0, 0)
+		vvelocity.set(0, 0)
+		frozen = false
+		stopped = false
+		running = false
+		launching = false
+		airjump_number = defaults.airjump_number
+		airjump_index = 0
+		remove_input()
+	}
+}
+
 ///@func player_set_gravity_direction(dir, reset_velocity)
 function player_set_gravity_direction(dir, reset_velocity = true) {
 	with oPlayer {

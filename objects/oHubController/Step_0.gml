@@ -5,12 +5,8 @@ if (!hub_spawn_applied && instance_exists(oPlayer)) {
     with (oPlayer) {
         x = other.hub_spawn_x;
         y = other.hub_floor_y - sprite_origin_to_bottom(sprite_index);
-        velocity.set(0, 0);
-        hvelocity.set(0, 0);
-        vvelocity.set(0, 0);
-        airjump_number = defaults.airjump_number;
-        airjump_index = 0;
     }
+    player_reset_transition_state(oPlayer);
     player_set_gravity_direction(0, true);
     hub_spawn_applied = true;
 }

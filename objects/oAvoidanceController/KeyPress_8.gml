@@ -3,6 +3,7 @@ if (variable_global_exists("avoidance_practice_active") && global.avoidance_prac
 }
 
 if (instance_exists(oPlayer)) {
+  player_reset_transition_state(oPlayer);
   warp(rMainHub, oPlayer)
 } else {
   room_goto(rMainHub)

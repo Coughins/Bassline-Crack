@@ -4732,6 +4732,9 @@ cube_edges = [
 
 cube_bullets_per_edge = 10;
 
+_k_cube_line_player_clear_near = 56;
+_k_cube_line_player_clear_far = 104;
+
 cube_phase_timer = 0;
 
 cube_breath_timer = 0;
@@ -4781,7 +4784,7 @@ hitstop_frames = 0;
 
 cube_rot_ease_timer = 0;
 
-cube_rot_ease_duration = 40;
+cube_rot_ease_duration = room_speed * 3;
 
 cube_extend = 1;
 

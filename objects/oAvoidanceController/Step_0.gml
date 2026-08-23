@@ -13407,7 +13407,7 @@ if (kdash_active) {
 
     repeat (9) {
       var _seed = instance_create_layer(irandom_range(20, room_width - 20),
-                                        irandom_range(-30, 250), "Instances", oRedKunaiDash);
+                                        irandom_range(-30, 40), "Instances", oRedKunaiDash);
       _seed.fall_speed = _k_kdash_fall_speed_start;
       _seed.speed = _seed.fall_speed;
       _seed.direction = 270;
@@ -15904,6 +15904,8 @@ if (timeline_hit(_k_cube_t_despawn)) {
   cube_despawn_active = true;
   cube_despawn_timer = 0;
   cube_shoot_phase_active = false;
+  with(oCube) hit_active = false;
+  with(oCubeFaceBullet) hit_active = false;
   cube_strobe = max(cube_strobe, 0.8);
   cube_core_flash = max(cube_core_flash, 1.2);
   hitstop_frames = 3;

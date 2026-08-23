@@ -11,6 +11,13 @@ if (spawn_delay > 0) {
     exit;
 }
 
+if (oAvoidanceController.cube_despawn_active || oAvoidanceController.t >= oAvoidanceController._k_cube_t_despawn) {
+    hit_active = false;
+    image_alpha = max(0, image_alpha - 0.25);
+    if (image_alpha <= 0.01) instance_destroy();
+    exit;
+}
+
 if (array_length(oAvoidanceController.big_cube_projected) < 8) {
     image_alpha = 0;
     hit_active = false;

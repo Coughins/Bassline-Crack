@@ -20,6 +20,10 @@ if (array_length(_verts_arr) < 8) {
     exit;
 }
 
+if (oAvoidanceController.cube_despawn_active) {
+    hit_active = false;
+}
+
 var _edge = oAvoidanceController.cube_edges[edge_index];
 var _v1 = _verts_arr[_edge[0]];
 var _v2 = _verts_arr[_edge[1]];
@@ -37,6 +41,15 @@ prev_x = x;
 prev_y = y;
 x = lerp(oAvoidanceController.cube_center_x, _raw_x, _ext);
 y = lerp(oAvoidanceController.cube_center_y, _raw_y, _ext);
+
+var _player_clear = 1;
+if (oAvoidanceController.cube_spawn_active && instance_exists(oPlayer)) {
+    var _pd = point_distance(x, y, oPlayer.x, oPlayer.y);
+    _player_clear = clamp((_pd - oAvoidanceController._k_cube_line_player_clear_near) /
+                          max(1, oAvoidanceController._k_cube_line_player_clear_far -
+                                 oAvoidanceController._k_cube_line_player_clear_near), 0, 1);
+    _player_clear = _player_clear * _player_clear;
+}
 
 vel_x = x - prev_x;
 vel_y = y - prev_y;
@@ -57,5 +70,6 @@ else
 }
 
 image_alpha = _fade_alpha * _z_scale;
-hit_active = image_alpha > hit_alpha_min && _z_scale > 0.9 && _pop_scale > 0.35 &&
+hit_active = !oAvoidanceController.cube_despawn_active &&
+             _player_clear >= 0.98 && image_alpha > hit_alpha_min && _z_scale > 0.9 && _pop_scale > 0.35 &&
              abs(image_xscale) > hit_scale_min && abs(image_yscale) > hit_scale_min;
