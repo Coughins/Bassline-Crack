@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"scr_generate_energize_crackle",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"scr_generate_energize_crackle",
+  "parent":{
+    "name":"Lightning",
+    "path":"folders/Scripts/Lightning.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

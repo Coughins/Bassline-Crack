@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"scr_vault_draw",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"scr_vault_draw",
+  "parent":{
+    "name":"Vault",
+    "path":"folders/Scripts/Vault.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

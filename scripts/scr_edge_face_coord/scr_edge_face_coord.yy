@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"scr_edge_face_coord",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"scr_edge_face_coord",
+  "parent":{
+    "name":"Cube",
+    "path":"folders/Scripts/Cube.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

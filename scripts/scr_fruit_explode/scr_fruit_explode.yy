@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"scr_fruit_explode",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"scr_fruit_explode",
+  "parent":{
+    "name":"Tree",
+    "path":"folders/Scripts/Tree.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

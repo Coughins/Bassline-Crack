@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"scr_spawn_scythe_attack",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"scr_spawn_scythe_attack",
+  "parent":{
+    "name":"Scythe",
+    "path":"folders/Objects/Scythe.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

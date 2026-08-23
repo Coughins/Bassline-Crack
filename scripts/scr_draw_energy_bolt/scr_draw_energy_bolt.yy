@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"scr_draw_energy_bolt",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"scr_draw_energy_bolt",
+  "parent":{
+    "name":"Lightning",
+    "path":"folders/Scripts/Lightning.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

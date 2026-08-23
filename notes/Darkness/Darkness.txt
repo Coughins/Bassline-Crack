@@ -1,0 +1,227 @@
+// === One-time burst of bouncing light orbs at attack start ===
+if (timeline_hit(4000))
+{
+    var _burst_count = 12;      // how many light orbs radiate out
+    var _burst_speed = 5;       // slower, since these are "light" orbs
+    var _burst_radius = 80;    // light radius, matches your other light orbs
+
+    for (var i = 0; i < _burst_count; i++)
+    {
+        var _ang = (360 / _burst_count) * i;
+        var _o = instance_create_layer(400, 304, layer, oRedOrb_2);
+        _o.direction = _ang;
+        _o.speed = _burst_speed;
+        _o.image_xscale = 2.0;
+        _o.image_yscale = 2.0;
+        _o.image_blend = c_white;
+        _o.light_radius = _burst_radius;
+        _o.bounces = true; // flag this orb to bounce off walls
+    }
+}
+if t >= 4000 and t < 4100 {
+	with oPlayer {
+		if light_radius < 160 {
+			light_radius += 2
+		}
+	}
+}
+if (t >= 4000 && t < 4653)
+{
+    var _t_rel = t - 4000;
+    var _duration = 653;
+    var _progress = _t_rel / _duration;
+
+    // idea 6: three phases across the attack's duration
+    var _phase = 0;
+    if (_progress > 0.66) _phase = 2;
+    else if (_progress > 0.33) _phase = 1;
+
+    var _base_rate, _wobble_amp, _wobble_freq, _pull_strength;
+    switch (_phase)
+    {
+        case 0: // slow wide swirl
+            _base_rate = 0.15; _wobble_amp = 5;  _wobble_freq = 0.05;
+            _pull_strength = 0.15 + 0.1 * sin(_t_rel * 0.02);
+            break;
+        case 1: // fast tight swirl
+            _base_rate = 0.35; _wobble_amp = 15; _wobble_freq = 0.08;
+            _pull_strength = 0.3 + 0.2 * sin(_t_rel * 0.04);
+            break;
+        case 2: // chaotic mixed
+            _base_rate = 0.25; _wobble_amp = 30; _wobble_freq = 0.15;
+            _pull_strength = 0.25 + 0.35 * sin(_t_rel * 0.07);
+            break;
+    }
+
+    // idea 1: oscillating rotational drift added on top of the tangent direction
+    var _drift = _base_rate * _t_rel + _wobble_amp * sin(_t_rel * _wobble_freq);
+    var spd = 4.5; // nerfed from 6 — normal bullets move slower
+
+    // idea 2: spawn interval breathes in and out (dense <-> sparse); doubled range = half the spawn events
+    var _interval = round(lerp(6, 20, (sin(_t_rel * 0.05) * 0.5 + 0.5)));
+
+    // idea 2b: which edges are active cycles through patterns over time — bottom (2) removed
+    var _edge_patterns = [
+        [0, 1, 3],    // top, left, right
+        [0],          // top only
+        [1, 3],       // left + right only
+        [0, 1, 3]     // back to top, left, right
+    ];
+    var _pattern_index = floor(_t_rel / 40) mod array_length(_edge_patterns);
+    var _active_edges = _edge_patterns[_pattern_index];
+
+    // local helper: spawns one orb from a given edge, orbiting the center with inward pull + drift + optional light-orb
+    // _spin: +1 for clockwise, -1 for counter-clockwise
+    var _spawn_orb = function(_edge, _spin, _spd, _pull, _drift)
+    {
+        var _sx, _sy;
+        switch (_edge)
+        {
+            case 0: _sx = random_range(-200, 1000); _sy = -20;  break; // top
+            case 1: _sx = -20;  _sy = random_range(-150, 800); break; // left
+            case 3: _sx = 820;  _sy = random_range(-150, 800); break; // right
+        }
+
+        var _dir_to_center = point_direction(_sx, _sy, 400, 304);
+        var _tangent_dir = _dir_to_center + (90 * _spin) + _drift;
+        var _final_dir = _tangent_dir + (_pull * angle_difference(_dir_to_center, _tangent_dir));
+
+        var _o = instance_create_layer(_sx, _sy, layer, oRedOrb_2);
+        _o.direction = _final_dir;
+        _o.speed = _spd;
+
+        // idea 5: rare "light" orb — exactly 2x size, slower, glows so the player can spot it and dodge
+        if (irandom(19) == 0) // ~1 in 20, tune to taste
+        {
+            _o.image_xscale = 2.0;
+            _o.image_yscale = 2.0;
+            _o.image_blend = c_white;
+            _o.speed = _spd * 0.4;      // noticeably slower than the rain around it
+            _o.light_radius = 140;      // this is the only kind of orb that lights up
+        }
+
+        return _o;
+    }
+
+    if (_t_rel mod _interval == 0)
+    {
+        for (var e = 0; e < array_length(_active_edges); e++)
+        {
+            var _edge = _active_edges[e];
+            _spawn_orb(_edge, 1, spd, _pull_strength, _drift);  // clockwise
+            _spawn_orb(_edge, -1, spd, _pull_strength, _drift); // counter-clockwise
+        }
+    }
+
+    // idea 4: periodic denser pulse burst layered on top of the steady rain — bottom edge removed
+    if (_t_rel mod 55 == 0)
+    {
+        var _burst_edges = [0, 1, 3];
+        for (var e = 0; e < array_length(_burst_edges); e++)
+        {
+            var _edge = _burst_edges[e];
+            _spawn_orb(_edge, 1, spd * 1.4, _pull_strength, _drift);
+            _spawn_orb(_edge, -1, spd * 1.4, _pull_strength, _drift);
+        }
+    }
+}
+if (timeline_hit(4653))
+{
+    with (oRedOrb_2)
+    {
+        dying = true;
+        _die_timer = 0;
+    }
+}
+
+
+DRAW END
+// === Darkness + Light overlay ===
+// Only active during the swirl attack window; adjust condition as needed
+// === Darkness + Light overlay ===
+//if (t >= 3889 && t < 4653)
+//{
+   
+//	if t >= 3889 and t < 4000 {
+//		var _span = 4000 - 3889;
+//		darkness_alpha += 1 / _span;
+//		darkness_alpha = clamp(darkness_alpha, 0, 1);
+//	}
+
+//	if (t >= 4653 && t < 4683) // 30-frame flash-and-clear window after the attack ends
+//	{
+//	    var _flash_progress = (t - 4653) / 30;
+//	    // quick bright flash first (alpha dips toward 0 = screen goes bright), then settles back to fully lit (alpha 0)
+//	    darkness_alpha = lerp(1.0, 0.0, _flash_progress);
+//	}
+//	else if (t >= 4683)
+//	{
+//	    darkness_alpha = 0.0; // fully lit, attack over
+//	}
+
+//    var _surf_w = camera_get_view_width(view_camera[0]);
+//    var _surf_h = camera_get_view_height(view_camera[0]);
+
+//    if (!surface_exists(global.light_surface))
+//    {
+//        global.light_surface = surface_create(_surf_w, _surf_h);
+//    }
+
+//    var _cam_x = camera_get_view_x(view_camera[0]);
+//    var _cam_y = camera_get_view_y(view_camera[0]);
+
+//    surface_set_target(global.light_surface);
+//    draw_clear_alpha(c_black, darkness_alpha);
+
+//    gpu_set_blendmode(bm_subtract);
+
+//    // helper-style inline gradient punch: draws concentric rings, strongest at center, fading to 0 at the edge
+//    var _draw_light = function(_lx, _ly, _radius)
+//    {
+//        var _steps = 8;
+//        for (var i = _steps; i > 0; i--)
+//        {
+//            var _r = _radius * (i / _steps);
+//            var _a = 1 - (i / _steps); // outer rings punch less, center rings punch fully
+//            draw_circle_color(_lx, _ly, _r, c_white, c_white, false);
+//            // note: draw_circle_color has no per-call alpha param, so we use image_alpha via draw_set_alpha
+//        }
+//    }
+
+//    // player light
+//    if (instance_exists(oPlayer))
+//    {
+//        var _px = oPlayer.x - _cam_x;
+//        var _py = oPlayer.y - _cam_y;
+//        var _steps = 10;
+//        for (var i = _steps; i > 0; i--)
+//        {
+//            draw_set_alpha(1 - (i / _steps));
+//            draw_circle_color(_px, _py, oPlayer.light_radius * (i / _steps), c_white, c_white, false);
+//        }
+//        draw_set_alpha(1);
+//    }
+
+//    // light bullets only (light_radius > 0)
+//    with (oRedOrb_2)
+//    {
+//        if (light_radius > 0)
+//        {
+//            var _bx = x - _cam_x;
+//            var _by = y - _cam_y;
+//            var _steps = 10;
+//            for (var i = _steps; i > 0; i--)
+//            {
+//                draw_set_alpha(1 - (i / _steps));
+//                draw_circle_color(_bx, _by, light_radius * (i / _steps), c_white, c_white, false);
+//            }
+//            draw_set_alpha(1);
+//        }
+//    }
+
+//    gpu_set_blendmode(bm_normal);
+//    surface_reset_target();
+
+//    draw_surface(global.light_surface, _cam_x, _cam_y);
+//}
+

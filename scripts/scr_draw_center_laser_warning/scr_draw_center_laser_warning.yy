@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"scr_draw_center_laser_warning",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"scr_draw_center_laser_warning",
+  "parent":{
+    "name":"Laser",
+    "path":"folders/Scripts/Laser.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

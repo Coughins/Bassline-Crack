@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"scr_lightning_lattice",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"scr_lightning_lattice",
+  "parent":{
+    "name":"Lightning",
+    "path":"folders/Scripts/Lightning.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

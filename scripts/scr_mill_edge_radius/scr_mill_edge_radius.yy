@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"scr_mill_edge_radius",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"scr_mill_edge_radius",
+  "parent":{
+    "name":"Laser",
+    "path":"folders/Scripts/Laser.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

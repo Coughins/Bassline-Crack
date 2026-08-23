@@ -1,0 +1,24 @@
+.gm-cache/
+.gmcache/
+output/
+tmp/
+
+# Local assistant / working context
+.claude/
+AGENTS.md
+PROJECT_CONTEXT.md
+REVIEW_SUMMARY.md
+MAKING_IT_LOOK_GOOD.md
+TODO.md
+scratchpad/
+
+# Generated, capture, and audit artifacts
+generated_assets/
+bc_profile_captures/
+Final_Avoidance_Audit/
+Final_Avoidance_ReAudit/
+archive/
+
+# One-off local tools / paste buffers
+convert_timeline.py
+oAvoidanceController_Create_0_PASTE.gml

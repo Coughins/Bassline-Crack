@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"scr_spawn_tree_half",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"scr_spawn_tree_half",
+  "parent":{
+    "name":"Tree",
+    "path":"folders/Scripts/Tree.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

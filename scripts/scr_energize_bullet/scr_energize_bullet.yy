@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"scr_energize_bullet",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"scr_energize_bullet",
+  "parent":{
+    "name":"Lightning",
+    "path":"folders/Scripts/Lightning.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

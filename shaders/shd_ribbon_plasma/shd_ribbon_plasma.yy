@@ -1,0 +1,12 @@
+{
+  "$GMShader":"",
+  "%Name":"shd_ribbon_plasma",
+  "name":"shd_ribbon_plasma",
+  "parent":{
+    "name":"Wave",
+    "path":"folders/Objects/Bullets/Wave.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
+}

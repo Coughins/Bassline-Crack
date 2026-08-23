@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"scr_laser_muzzle_burst",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"scr_laser_muzzle_burst",
+  "parent":{
+    "name":"Lightning",
+    "path":"folders/Scripts/Lightning.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"scr_draw_hexagon",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"scr_draw_hexagon",
+  "parent":{
+    "name":"Honeycomb",
+    "path":"folders/Scripts/Honeycomb.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

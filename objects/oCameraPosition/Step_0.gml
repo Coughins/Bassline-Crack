@@ -1,0 +1,5 @@
+if (active)
+	camera_set_view_pos(
+		camera,
+		clamp(x, area.x, area.x + area.w),
+		clamp(y, area.y, area.y + area.h))

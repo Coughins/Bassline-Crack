@@ -1,0 +1,26 @@
+{
+  "$GMSound":"v2",
+  "%Name":"sSkyPuzzle",
+  "audioGroupId":{
+    "name":"audiogroup_default",
+    "path":"audiogroups/audiogroup_default",
+  },
+  "bitDepth":1,
+  "channelFormat":0,
+  "compression":0,
+  "compressionQuality":4,
+  "conversionMode":0,
+  "duration":63.59841,
+  "exportDir":"",
+  "name":"sSkyPuzzle",
+  "parent":{
+    "name":"Sound Effects",
+    "path":"folders/Sounds/Sound Effects.yy",
+  },
+  "preload":false,
+  "resourceType":"GMSound",
+  "resourceVersion":"2.0",
+  "sampleRate":44100,
+  "soundFile":"sSkyPuzzle.ogg",
+  "volume":1.0,
+}

@@ -1,0 +1,15 @@
+grazed = false;
+graze_bolt_life = 0;
+graze_bolt_max = 10;graze_delay = 10;
+energized = false;
+energized_timer = 0;
+energize_seed = random(1000);
+crackle_points = [];
+crackle_regen_timer = 0;
+orbit_bolts = [];
+energize_flicker = 1;
+energize_glow_scale = 1;
+energize_color = global.lightning_color;
+hit_active = true;
+hit_alpha_min = 0.05;
+hit_scale_min = 0.05;

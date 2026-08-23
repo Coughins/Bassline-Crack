@@ -1,0 +1,83 @@
+REMOVED VARIABLES LOG
+====================
+File: oAvoidanceController/Create_0.gml
+Date: Cleanup pass
+
+These variables were initialized but never read anywhere in Step_0, Draw_0, Draw_75, or Other_5 events.
+Removed to reduce clutter and prevent potential shadowing of built-ins.
+
+--- LIST ---
+
+1. music_offset = 0
+   - Set to 0, never read. Timing uses `t` directly.
+
+2. arrow_ring_active = true
+   - Never read. Ring lifecycle uses `arrow_ring_created` instead.
+
+3. arrow_ring_target_speed = 0
+   - Never read. Speed ramps use `arrow_ring_rotate_speed` directly.
+
+4. transition_rot = random(360)
+   - Set in Create, never referenced in any event.
+
+5. transition_circle = true
+   - Never read. Maze shapes use `transition_maze_beat` for state tracking.
+
+6. angle = 0
+   - Generic name, never read anywhere.
+
+7. rotation_speed = 1
+   - Never read. Transition sequence uses per-object speed variables.
+
+8. spacing = 48
+   - Never read. Maze cross arms use hardcoded _gap = 45.
+
+9. length = 8  (⚠️ IMPORTANT: was shadowing built-in array_length())
+   - Never read. This was DANGEROUS — `length` shadows the built-in `array_length()` function!
+   - Created potential for subtle bugs if `length` was accidentally used instead of `array_length()`.
+
+10. spawn_interval = 3
+    - Never read.
+
+11. transition_beat_index = 0
+    - Never read. Maze uses `transition_maze_beat` instead.
+
+12. chain_shapes = [scr_spawn_shape_star, ...]
+    - Never read. Chain lightning shape functions never invoked from this array.
+    - The chain system uses direct function calls per shape instead.
+
+13. chain_index = -1
+    - Never read.
+
+14. chain_state = 0
+    - Never read.
+
+15. chain_wait_timer = 0
+    - Never read.
+
+16. darkness_alpha = 0
+    - Never read. Global darkness uses `global.light_surface` for light overlay management.
+
+17. cube_shake_timestamps = [4653, 4654, ...]
+    - Never read. `cube_shoot_timestamps` is the array actually used in Step for bullet burst timings.
+
+18. small_cube_projected = []
+    - Never read. Only `big_cube_projected` is used for drawing and face calculations.
+
+19. vortex_orb_count = 0
+    - Never read. Big orb tracking uses `big_orb_regions` array length.
+
+20. laser_speed = 0.4
+    laser_coreWidth = 0.75
+    laser_haloWidth = 1.0
+    laser_noiseStrength = 0.05
+    laser_twist = 0.06
+    laser_brightness = 1.0
+    laser_whiteAmount = 1.0
+    - These 7 variables are set on oAvoidanceController but the debug inspector's slider
+      properties register them on oLaserOrbTrigger's instance variables instead.
+    - Never read in oAvoidanceController Step/Draw — the laser shader uniforms are set from
+      the shader handles declared separately in Create.
+
+--- END LOG ---
+

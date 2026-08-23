@@ -1,0 +1,286 @@
+if (dna_active)
+{
+    // =========================
+    // CREATE DNA STRUCTURE
+    // =========================
+
+    for (var i = 0; i < dna_amount; i++)
+    {
+        var t = i / (dna_amount - 1);
+
+        var angle = dna_time + t * pi * 4;
+
+        var height = t * dna_height - dna_height / 2;
+
+
+
+        // =========================
+        // STRAND 1
+        // =========================
+
+        if (dna_array[i] == noone || !instance_exists(dna_array[i]))
+        {
+            var b = instance_create_layer(
+                dna_center_x,
+                dna_center_y,
+                "Instances",
+                oDNATest
+            );
+
+
+            b.dna_mode = true;
+			b.dna_radius = dna_radius;
+            b.dna_type = 0;
+            b.dna_side = 0;
+            b.dna_index = i;
+			b.spawn_timer = i * 2;
+
+
+            dna_array[i] = b;
+        }
+
+
+
+        // =========================
+        // STRAND 2
+        // =========================
+
+        if (dna_array[i + dna_amount] == noone || !instance_exists(dna_array[i + dna_amount]))
+        {
+            var b2 = instance_create_layer(
+                dna_center_x,
+                dna_center_y,
+                "Instances",
+                oDNATest
+            );
+
+
+            b2.dna_mode = true;
+			b2.dna_radius = dna_radius;
+            b2.dna_type = 0;
+            b2.dna_side = 1;
+            b2.dna_index = i;
+			b2.spawn_timer = i * 3;
+
+
+            dna_array[i + dna_amount] = b2;
+        }
+
+
+
+        // =========================
+        // CREATE RUNG BULLETS
+        // =========================
+
+        if (i mod dna_rung_spacing == 0)
+        {
+            for (var r = 0; r < rung_bullets; r++)
+            {
+                var rung_index =
+                    dna_amount * 2
+                    + floor(i / dna_rung_spacing) * rung_bullets
+                    + r;
+
+
+                if (dna_array[rung_index] == noone || !instance_exists(dna_array[rung_index]))
+                {
+                    var rb = instance_create_layer(
+                        dna_center_x,
+                        dna_center_y,
+                        "Instances",
+                        oDNATest
+                    );
+
+
+                    rb.dna_mode = true;
+					rb.dna_radius = dna_radius;
+                    rb.dna_type = 2;
+                    rb.rung_id = i;
+                    rb.rung_position = r;
+					rb.spawn_timer = i * 3;
+
+
+                    dna_array[rung_index] = rb;
+                }
+            }
+        }
+    }
+
+
+
+
+    // =========================
+    // UPDATE DNA POSITIONS
+    // =========================
+
+    for (var i = 0; i < dna_amount; i++)
+    {
+        var t = i / (dna_amount - 1);
+
+        var height = t * dna_height - dna_height / 2;
+
+
+        var angle = dna_time + t * pi * 4;
+
+
+
+        // fake 3D rotation
+
+        var x_offset = cos(angle) * dna_radius;
+
+        var z_depth = sin(angle) * dna_radius;
+
+
+
+        // =========================
+        // STRAND 1
+        // =========================
+
+        var b1 = dna_array[i];
+
+
+        if (instance_exists(b1))
+        {
+            b1.x = dna_center_x + x_offset;
+
+            b1.y =
+                dna_center_y
+                + height
+                + z_depth * 0.5;
+
+
+            b1.depth = -z_depth;
+			b1.dna_z = z_depth;
+
+
+
+            // depth fade
+            b1.image_alpha = clamp(
+                0.45 + z_depth / dna_radius * 0.55,
+                0.2,
+                1
+            );
+
+
+            var s1 = 1 + z_depth / dna_radius * 0.3;
+
+            b1.image_xscale = s1;
+            b1.image_yscale = s1;
+        }
+
+
+
+        // =========================
+        // STRAND 2
+        // =========================
+
+        var b2 = dna_array[i + dna_amount];
+
+
+        if (instance_exists(b2))
+        {
+            b2.x = dna_center_x - x_offset;
+
+            b2.y =
+                dna_center_y
+                + height
+                - z_depth * 0.5;
+
+
+            b2.depth = z_depth;
+			b2.dna_z = -z_depth;
+
+
+
+            // depth fade opposite direction
+            b2.image_alpha = clamp(
+                0.45 - z_depth / dna_radius * 0.55,
+                0.2,
+                1
+            );
+
+
+            var s2 = 1 - z_depth / dna_radius * 0.3;
+
+            b2.image_xscale = s2;
+            b2.image_yscale = s2;
+        }
+
+
+
+
+        // =========================
+// UPDATE RUNG BULLETS
+// =========================
+
+if (i mod dna_rung_spacing == 0)
+{
+    for (var r = 0; r < rung_bullets; r++)
+    {
+        var rung_index =
+            dna_amount * 2
+            + floor(i / dna_rung_spacing) * rung_bullets
+            + r;
+
+
+        var rb = dna_array[rung_index];
+
+
+        if (instance_exists(rb))
+{
+    var amount = (r + 1) / (rung_bullets + 1);
+
+
+    // position between strands
+    rb.x = lerp(
+        b1.x,
+        b2.x,
+        amount
+    );
+
+
+    rb.y = lerp(
+        b1.y,
+        b2.y,
+        amount
+    );
+
+
+	// rung perspective depth
+	var rung_depth = sin(angle) * dna_radius;
+
+
+	// middle of rung goes deeper
+	var center_factor = abs(amount - 0.5) * 2;
+
+
+	// store fake 3D depth
+	rb.depth = -rung_depth * center_factor;
+	rb.dna_z = rung_depth * center_factor;
+
+
+	rb.image_alpha = clamp(
+	    0.15 + (rung_depth / dna_radius * center_factor) * 0.85,
+	    0.15,
+	    1
+	);
+
+
+    // =========================
+    // RUNG PERSPECTIVE SCALE
+    // =========================
+
+    var rung_scale = clamp(
+        0.7 + (rung_depth / dna_radius) * 0.3,
+        0.5,
+        1
+    );
+
+
+    rb.image_xscale = rung_scale;
+    rb.image_yscale = rung_scale;
+}
+    }
+}
+    }
+}

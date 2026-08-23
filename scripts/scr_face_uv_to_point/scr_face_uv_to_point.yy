@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"scr_face_uv_to_point",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"scr_face_uv_to_point",
+  "parent":{
+    "name":"Cube",
+    "path":"folders/Scripts/Cube.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

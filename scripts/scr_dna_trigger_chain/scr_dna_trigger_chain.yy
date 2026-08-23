@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"scr_dna_trigger_chain",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"scr_dna_trigger_chain",
+  "parent":{
+    "name":"DNA",
+    "path":"folders/Scripts/DNA.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

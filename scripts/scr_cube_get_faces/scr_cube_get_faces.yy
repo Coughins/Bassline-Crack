@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"scr_cube_get_faces",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"scr_cube_get_faces",
+  "parent":{
+    "name":"Cube",
+    "path":"folders/Scripts/Cube.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

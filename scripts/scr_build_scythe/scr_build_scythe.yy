@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"scr_build_scythe",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"scr_build_scythe",
+  "parent":{
+    "name":"Scythe",
+    "path":"folders/Objects/Scythe.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

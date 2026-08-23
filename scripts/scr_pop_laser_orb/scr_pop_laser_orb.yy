@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"scr_pop_laser_orb",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"scr_pop_laser_orb",
+  "parent":{
+    "name":"Laser",
+    "path":"folders/Scripts/Laser.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

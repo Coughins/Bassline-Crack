@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"scr_spawn_honeycomb_walls",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"scr_spawn_honeycomb_walls",
+  "parent":{
+    "name":"Honeycomb",
+    "path":"folders/Scripts/Honeycomb.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

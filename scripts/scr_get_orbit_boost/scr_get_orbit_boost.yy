@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"scr_get_orbit_boost",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"scr_get_orbit_boost",
+  "parent":{
+    "name":"Kunai",
+    "path":"folders/Objects/Bullets/Kunai.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

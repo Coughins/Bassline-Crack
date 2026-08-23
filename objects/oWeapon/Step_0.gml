@@ -1,0 +1,1 @@
+cooldown = max(cooldown - 1, 0)

@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"scr_generate_tree",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"scr_generate_tree",
+  "parent":{
+    "name":"Tree",
+    "path":"folders/Scripts/Tree.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

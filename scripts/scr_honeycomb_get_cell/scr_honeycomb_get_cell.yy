@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"scr_honeycomb_get_cell",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"scr_honeycomb_get_cell",
+  "parent":{
+    "name":"Honeycomb",
+    "path":"folders/Scripts/Honeycomb.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

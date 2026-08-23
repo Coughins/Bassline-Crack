@@ -1,0 +1,15 @@
+dna_active = true;
+dna_rotating = false;
+dna_center_x = room_width/2;
+dna_center_y = room_height/2;
+dna_height = 608;
+dna_radius = 60;
+dna_amount = 60;
+dna_time = 0;
+dna_rung_spacing = 2;
+rung_bullets = 10; 
+
+dna_array = array_create(
+    dna_amount * 2 + dna_amount * rung_bullets,
+    noone
+);

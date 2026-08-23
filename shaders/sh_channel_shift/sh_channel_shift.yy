@@ -1,0 +1,12 @@
+{
+  "$GMShader":"",
+  "%Name":"sh_channel_shift",
+  "name":"sh_channel_shift",
+  "parent":{
+    "name":"Shaders",
+    "path":"folders/Shaders.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
+}

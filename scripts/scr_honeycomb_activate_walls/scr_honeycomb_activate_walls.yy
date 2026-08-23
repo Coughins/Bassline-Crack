@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"scr_honeycomb_activate_walls",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"scr_honeycomb_activate_walls",
+  "parent":{
+    "name":"Honeycomb",
+    "path":"folders/Scripts/Honeycomb.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

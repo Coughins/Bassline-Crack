@@ -1,0 +1,12 @@
+{
+  "$GMShader":"",
+  "%Name":"shd_matrix_rain",
+  "name":"shd_matrix_rain",
+  "parent":{
+    "name":"Background",
+    "path":"folders/Objects/Background.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
+}

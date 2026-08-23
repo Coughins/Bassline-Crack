@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"scr_get_leaf_nodes",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"scr_get_leaf_nodes",
+  "parent":{
+    "name":"Tree",
+    "path":"folders/Scripts/Tree.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"scr_get_face_random_point",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"scr_get_face_random_point",
+  "parent":{
+    "name":"Cube",
+    "path":"folders/Scripts/Cube.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

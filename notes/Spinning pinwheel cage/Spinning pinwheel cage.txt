@@ -1,0 +1,46 @@
+oAvoidanceController Create
+transition_beat_index = 0; // tracks which of the 6 pinwheel beats we're on
+
+oAvoidanceController Step
+if (t == 6466 || t == 6482 || t == 6499 || t == 6513 || t == 6528 || t == 6536)
+{
+    var _center_x    = room_width / 2;
+    var _center_y    = room_height / 2;
+    var _spoke_count = 4;              // number of spokes per beat (evenly spaced around the circle)
+    var _orbs_per_spoke = 6;           // orbs per spoke, spread along its length
+    var _orb_gap     = 50;             // spacing between orbs along a spoke
+    var _radius      = 500;            // distance from center to spawn each spoke (should clear screen edges)
+
+    // rotation accumulates each beat, plus a small extra kick per beat for a "spinning up" feel
+    var _rotation_per_beat = 25;
+    var _beat_rotation = transition_beat_index * _rotation_per_beat;
+
+    // speed ramps up slightly each beat, so the cage feels like it's accelerating inward
+    var _speed = 12 + (transition_beat_index * 2);
+
+    for (var s = 0; s < _spoke_count; s++)
+    {
+        var _spoke_angle = (360 / _spoke_count) * s + _beat_rotation;
+
+        var _spawn_x = _center_x + lengthdir_x(_radius, _spoke_angle);
+        var _spawn_y = _center_y + lengthdir_y(_radius, _spoke_angle);
+        var _dir     = _spoke_angle + 180; // aim back toward center
+
+        for (var i = 0; i < _orbs_per_spoke; i++)
+        {
+            var _off = i * _orb_gap;
+            var _ox = _spawn_x + lengthdir_x(_off, _spoke_angle); // offset further out along the same spoke line
+            var _oy = _spawn_y + lengthdir_y(_off, _spoke_angle);
+
+            with (instance_create_layer(_ox, _oy, layer, oRedOrb))
+            {
+                orb_fan_mode = false; // plain straight shot, no decel/fire lifecycle
+                direction    = _dir;
+                image_angle  = _dir;
+                speed        = _speed;
+            }
+        }
+    }
+
+    transition_beat_index++;
+}

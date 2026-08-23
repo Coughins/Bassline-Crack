@@ -1,0 +1,1 @@
+if (graze_bolt_life > 0) graze_bolt_life -= 1;

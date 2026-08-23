@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"scr_ribbon_smooth",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"scr_ribbon_smooth",
+  "parent":{
+    "name":"Wave",
+    "path":"folders/Objects/Bullets/Wave.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

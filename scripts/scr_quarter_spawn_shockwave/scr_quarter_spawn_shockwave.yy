@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"scr_quarter_spawn_shockwave",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"scr_quarter_spawn_shockwave",
+  "parent":{
+    "name":"Visuals",
+    "path":"folders/Scripts/Visuals.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

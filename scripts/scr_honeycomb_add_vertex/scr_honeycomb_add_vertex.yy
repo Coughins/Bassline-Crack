@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"scr_honeycomb_add_vertex",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"scr_honeycomb_add_vertex",
+  "parent":{
+    "name":"Honeycomb",
+    "path":"folders/Scripts/Honeycomb.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

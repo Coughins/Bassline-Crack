@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"scr_kunai_burst",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"scr_kunai_burst",
+  "parent":{
+    "name":"Kunai",
+    "path":"folders/Scripts/Kunai.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

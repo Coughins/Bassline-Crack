@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"scr_draw_warning_edge",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"scr_draw_warning_edge",
+  "parent":{
+    "name":"Laser",
+    "path":"folders/Scripts/Laser.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

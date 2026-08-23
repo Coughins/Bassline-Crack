@@ -1,0 +1,63 @@
+oRedOrb Create
+orb_spiral_mode = false; // off by default, only used by the transition attack
+orb_spiral_cx = 0;
+orb_spiral_cy = 0;
+orb_spiral_angle = 0;
+orb_spiral_radius = 0;
+orb_spiral_rot_rate = 0;   // degrees per frame the angle advances
+orb_spiral_shrink_rate = 0; // how much radius shrinks per frame
+
+oRedOrb Step
+if (orb_spiral_mode)
+{
+    orb_spiral_angle  += orb_spiral_rot_rate;
+    orb_spiral_radius -= orb_spiral_shrink_rate;
+
+    if (orb_spiral_radius <= 0)
+    {
+        instance_destroy(); // reached the center, done
+        exit;
+    }
+
+    x = orb_spiral_cx + lengthdir_x(orb_spiral_radius, orb_spiral_angle);
+    y = orb_spiral_cy + lengthdir_y(orb_spiral_radius, orb_spiral_angle);
+    image_angle = orb_spiral_angle + 90; // orient along the spiral's direction of travel
+}
+
+
+
+oAvoidanceController Step
+if (t == 6466 || t == 6482 || t == 6499 || t == 6513 || t == 6528 || t == 6536)
+{
+    var _center_x = room_width / 2;
+    var _center_y = room_height / 2;
+    var _count    = 10;      // orbs in the ring this beat
+    var _radius   = 500;     // start distance from center, should clear screen edges
+
+    // each beat spirals in faster and tighter than the last
+    var _rot_rate    = 4 + (transition_beat_index * 1.5); // degrees/frame
+    var _shrink_rate = 3 + (transition_beat_index * 1.5); // radius lost per frame
+
+    var _ring_offset = transition_beat_index * 15; // rotate starting positions each beat, avoid repeats
+
+    for (var i = 0; i < _count; i++)
+    {
+        var _angle = (360 / _count) * i + _ring_offset;
+        var _sx = _center_x + lengthdir_x(_radius, _angle);
+        var _sy = _center_y + lengthdir_y(_radius, _angle);
+
+        with (instance_create_layer(_sx, _sy, layer, oRedOrb))
+        {
+            orb_fan_mode   = false;
+            orb_spiral_mode = true;
+            orb_spiral_cx = _center_x;
+            orb_spiral_cy = _center_y;
+            orb_spiral_angle = _angle;
+            orb_spiral_radius = _radius;
+            orb_spiral_rot_rate = _rot_rate;
+            orb_spiral_shrink_rate = _shrink_rate;
+        }
+    }
+
+    transition_beat_index++;
+}

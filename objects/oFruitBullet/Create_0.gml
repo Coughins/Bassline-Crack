@@ -1,0 +1,38 @@
+event_inherited();
+anchor_x = x;
+anchor_y = y;
+bar_half = 20;
+bar_offset = 0;
+sweep_angle = random(360);
+sweep_speed = 12;
+life = 30;
+timer = 0;
+
+fruit_color = c_white;
+visual_seed = random(1000);
+trail_history = [];
+trail_length = 9;
+post_reform = false;
+fruit_imploding = false;
+fruit_implosion_boosted = false;
+fruit_implosion_speed_mult = 1;
+fruit_implosion_speed_mult_target = 1;
+fruit_implosion_timer = 0;
+_k_fruit_impl_ramp_frames = 30;
+_k_fruit_impl_accel = 0.17;
+_k_fruit_impl_accel_floor = 0.03;
+_k_fruit_impl_max_speed = 26;
+fruit_seed_ring_power = 1.15;
+fruit_seed_heat = 1;
+speed_up = false;
+speed_up_max = 0;
+speed_up_amount = 0;
+is_curving = false;
+curve_amount = 0;
+
+reforming = false;
+reform_timer = 0;
+reform_duration = 16;
+is_center = false;
+reform_start_offset = 0;
+sweep_speed_start = 0;

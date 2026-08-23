@@ -1,0 +1,12 @@
+{
+  "$GMShader":"",
+  "%Name":"shd_bg_plasma",
+  "name":"shd_bg_plasma",
+  "parent":{
+    "name":"Background",
+    "path":"folders/Objects/Background.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
+}

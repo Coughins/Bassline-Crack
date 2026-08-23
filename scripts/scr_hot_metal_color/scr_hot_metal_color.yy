@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"scr_hot_metal_color",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"scr_hot_metal_color",
+  "parent":{
+    "name":"Kunai",
+    "path":"folders/Objects/Bullets/Kunai.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

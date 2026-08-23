@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"scr_compute_tree_ignite_delays",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"scr_compute_tree_ignite_delays",
+  "parent":{
+    "name":"Tree",
+    "path":"folders/Scripts/Tree.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

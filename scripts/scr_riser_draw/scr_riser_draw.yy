@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"scr_riser_draw",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"scr_riser_draw",
+  "parent":{
+    "name":"Riser",
+    "path":"folders/Scripts/Riser.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"scr_draw_avoidance_simple_object_glows",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"scr_draw_avoidance_simple_object_glows",
+  "parent":{
+    "name":"Visuals",
+    "path":"folders/Scripts/Visuals.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

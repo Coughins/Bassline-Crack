@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"scr_mill_arm_point",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"scr_mill_arm_point",
+  "parent":{
+    "name":"Laser",
+    "path":"folders/Scripts/Laser.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}
