@@ -500,6 +500,7 @@ orb_final_burst = 0;
 // ============================================================================
 
 _k_orb_split_lead = 16;
+_k_orb_split_child_speed_cap = 7.0;
 
 _k_orb_split_style = [
   { debris :  9, scar : 1, bridge : 3.6, aspect : 2.3, violet : 1, vent : 5, hold : 15 },

@@ -16774,7 +16774,7 @@ if (_orb_split >= 0) {
       var _adir3 = random(360);
       _arrow2.direction = _adir3;
       _arrow2.image_angle = _adir3;
-      _arrow2.speed = random_range(4, (8 + _orb_split * 0.6) * 0.8);
+      _arrow2.speed = random_range(4, min(_k_orb_split_child_speed_cap, (8 + _orb_split * 0.6) * 0.8));
     }
   }
 
