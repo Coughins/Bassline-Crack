@@ -14502,121 +14502,13 @@ if (timeline_hit(transition_reveal_t)) {
 }
 if (transition_reveal_flash > 0) transition_reveal_flash = max(transition_reveal_flash - 0.08, 0);
 
-if (dna_active && t >= 4990 && t < _k_dna_despawn_t && dna_spawn_cursor < dna_amount) {
-  var _row_end = min(dna_spawn_cursor + dna_spawn_rows_per_frame, dna_amount);
-
-  for (var i = dna_spawn_cursor; i < _row_end; i++) {
-    for (var s = 0; s < array_length(dna_structures); s++) {
-      var _struct = dna_structures[s];
-      var _cx = _struct.center_x;
-      var _cy = _struct.center_y;
-
-      if (!instance_exists(dna_structures[s].array[i])) {
-        var _b = instance_create_layer(_cx, _cy, "Instances", oDNATest);
-
-        _b.dna_mode = true;
-        _b.dna_type = 0;
-        _b.dna_side = 0;
-        _b.dna_index = i;
-        _b.spawn_scale = 0;
-        _b.spawn_timer = floor(i * 15 / dna_amount);
-        _b.spawn_duration = 1;
-        _b.strand = 0;
-        _b.struct_id = s;
-        _b.dna_rung_spacing = dna_rung_spacing;
-        _b.rung_bullets = rung_bullets;
-        _b.chain_delay = chain_delay;
-        _b.chain_step = chain_step;
-        _b.chain_dir = 1;
-
-        dna_structures[s].array[i] = _b;
-      }
-
-      if (!instance_exists(dna_structures[s].array[i + dna_amount])) {
-        var _b2 = instance_create_layer(_cx, _cy, "Instances", oDNATest);
-
-        _b2.dna_mode = true;
-        _b2.dna_type = 0;
-        _b2.dna_side = 1;
-        _b2.dna_index = i;
-        _b2.spawn_scale = 0;
-        _b2.spawn_timer = floor(i * 15 / dna_amount);
-        _b2.spawn_duration = 1;
-        _b2.strand = 1;
-        _b2.struct_id = s;
-        _b2.dna_rung_spacing = dna_rung_spacing;
-        _b2.rung_bullets = rung_bullets;
-        _b2.chain_delay = chain_delay;
-        _b2.chain_step = chain_step;
-        _b2.chain_dir = 1;
-
-        dna_structures[s].array[i + dna_amount] = _b2;
-      }
-
-      if (i mod dna_rung_spacing == 0) {
-        for (var r = 0; r < rung_bullets; r++) {
-          var _rung_index = dna_amount * 2 + floor(i / dna_rung_spacing) * rung_bullets + r;
-
-          if (!instance_exists(dna_structures[s].array[_rung_index])) {
-            var _rb = instance_create_layer(_cx, _cy, "Instances", oDNATest);
-
-            _rb.dna_mode = true;
-            _rb.dna_type = 2;
-            _rb.rung_id = i;
-            _rb.rung_position = r;
-            _rb.spawn_scale = 0;
-            _rb.spawn_timer = floor(i * 15 / dna_amount);
-            _rb.spawn_duration = 1;
-            _rb.strand = -1;
-            _rb.dna_index = -1;
-            _rb.struct_id = s;
-            _rb.dna_rung_spacing = dna_rung_spacing;
-            _rb.rung_bullets = rung_bullets;
-            _rb.chain_delay = chain_delay;
-            _rb.chain_step = chain_step;
-            _rb.rung_claimed = false;
-            _rb.rung_dir = 1;
-            _rb.chain_is_rung = false;
-
-            dna_structures[s].array[_rung_index] = _rb;
-          }
-        }
-      }
-    }
-  }
-
-  dna_spawn_cursor = _row_end;
-}
-
-if (dna_active && t >= 4990 && dna_write_p < 1) {
-  var _dw_prev = dna_write_p;
-  dna_write_p = clamp((t - 4990) / _k_dna_write_frames, 0, 1);
-
-  for (var s = 0; s < array_length(dna_structures); s++) {
-    var _ds = dna_structures[s];
-    var _lo_i = floor(_dw_prev * (dna_amount - 1));
-    var _hi_i = floor(dna_write_p * (dna_amount - 1));
-
-    for (var j = _lo_i; j < _hi_i; j++) {
-      var _strand_off = ((j + s) mod 2 == 0) ? 0 : dna_amount;
-      var _b_now  = _ds.array[j + _strand_off];
-      var _b_next = _ds.array[j + 1 + _strand_off];
-      if (!instance_exists(_b_now) || !instance_exists(_b_next)) continue;
-
-      if (array_length(dna_write_arcs) >= _k_dna_write_arc_max) array_delete(dna_write_arcs, 0, 1);
-      array_push(dna_write_arcs, {
-        sx : _b_now.x,  sy : _b_now.y,
-        ex : _b_next.x, ey : _b_next.y,
-        life : 9, life_max : 9,
-        off : scr_bolt_offsets(3, 7)
-      });
-
-      _b_now.state = "struck";
-      _b_now.hit_timer = 0;
-      _b_now.lightning_hit = true;
-    }
-  }
-
+if (timeline_hit(_k_dna_spawn_t)) {
+  dna_active = true;
+  dna_fade_active = true;
+  dna_fade_start_t = t;
+  dna_veil = 0;
+  dna_despawn_active = false;
+  dna_spawn_fully_active();
 }
 
 for (var i = array_length(dna_write_arcs) - 1; i >= 0; i--) {
@@ -14635,6 +14527,15 @@ for (var i = array_length(dna_cross_arcs) - 1; i >= 0; i--) {
   if (dna_cross_arcs[i].life <= 0) array_delete(dna_cross_arcs, i, 1);
 }
 
+if (dna_fade_active) {
+  var _dna_fade_p = clamp((t - dna_fade_start_t) / max(_k_dna_fade_frames, 1), 0, 1);
+  dna_veil = power(_dna_fade_p, 1.35);
+  if (_dna_fade_p >= 1) {
+    dna_fade_active = false;
+    dna_veil = 1;
+  }
+}
+
 var _dna_sim_n = (dna_veil > 0.02) ? array_length(dna_structures) : 0;
 
 for (var s = 0; s < _dna_sim_n; s++) {
@@ -14642,7 +14543,7 @@ for (var s = 0; s < _dna_sim_n; s++) {
   var _cx = _struct.center_x;
   var _cy = _struct.center_y;
 
-  _struct.time += 0.04 * _struct.dir;
+  _struct.time = dna_time_for_t(t) * _struct.dir;
   var _dna_time = _struct.time;
 
   for (var j = 0; j < dna_amount; j++) {
@@ -14721,49 +14622,6 @@ for (var s = 0; s < _dna_sim_n; s++) {
         }
       }
     }
-  }
-}
-
-while (array_length(dna_rung_queue) > 0 && active_dna_rung_chains < k_max_concurrent_rung_chains) {
-  var _next_fork = dna_rung_queue[0];
-  array_delete(dna_rung_queue, 0, 1);
-  if (instance_exists(_next_fork.inst) && !_next_fork.inst.active) {
-    _next_fork.inst.rung_dir = _next_fork.dir;
-    active_dna_rung_chains++;
-    with(_next_fork.inst) scr_dna_chain_activate_rung();
-  }
-}
-
-if timeline_hit_many (5076, 5110) {
-  with oDNATest { active = false; }
-  scr_dna_trigger_chain();
-
-  var _chain_second = timeline_hit(5110);
-  var _chain_power = _chain_second ? 1.0 : 0.72;
-  dna_chain_flash = _chain_power;
-
-  if (array_length(dna_structures) >= 2) {
-    var _cross_count = _chain_second ? 8 : 5;
-    for (var c = 0; c < _cross_count; c++) {
-      var _ci = irandom(dna_amount - 1);
-      var _cl = dna_structures[0].array[_ci];
-      var _cr = dna_structures[1].array[_ci + dna_amount];
-      if (!instance_exists(_cl) || !instance_exists(_cr)) continue;
-
-      if (array_length(dna_cross_arcs) >= _k_dna_cross_arc_max) array_delete(dna_cross_arcs, 0, 1);
-      array_push(dna_cross_arcs, {
-        a : _cl, b : _cr,
-        life : irandom_range(10, 18), life_max : 18,
-        off : scr_bolt_offsets(6, 26)
-      });
-    }
-  }
-
-  scr_impact_pulse(0.3 * _chain_power, 1.1 * _chain_power, 0.45 * _chain_power, 400, 304);
-  if (instance_exists(oCameraController)) {
-    oCameraController.shake = max(oCameraController.shake, 7 * _chain_power);
-    oCameraController.zoom_punch = max(oCameraController.zoom_punch, 0.05 * _chain_power);
-    oCameraController.screen_flash_alpha = max(oCameraController.screen_flash_alpha, 0.18 * _chain_power);
   }
 }
 
@@ -17130,6 +16988,7 @@ if (timeline_hit(_k_dna_despawn_t)) {
   dna_despawn_active = true;
   dna_despawn_start_t = t;
   dna_active = false;
+  dna_fade_active = false;
 }
 if (dna_despawn_active) {
   var _progress = clamp((t - dna_despawn_start_t) / _k_dna_despawn_duration, 0, 1);

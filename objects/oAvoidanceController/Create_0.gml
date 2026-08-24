@@ -3817,10 +3817,7 @@ lat = undefined;
 
 _k_lat_coil_frames = 15;
 
-dna_write_p = 0;
-_k_dna_write_frames = 40;
 dna_write_arcs = [];
-_k_dna_write_arc_max = 26;
 
 dna_chain_flash = 0;
 dna_cross_arcs = [];
@@ -5081,9 +5078,11 @@ swirl_strength = 0;
 
 swirl_target = 0;
 
-dna_active = true;
+dna_active = false;
 
-dna_veil = 1;
+dna_veil = 0;
+dna_fade_active = false;
+dna_fade_start_t = 0;
 
 dna_rotating = false;
 
@@ -5112,7 +5111,7 @@ dna_rung_queue = [];
 k_max_concurrent_rung_chains = 150;
 
 dna_spawn_cursor = 0;
-dna_spawn_rows_per_frame = 2;
+dna_spawn_rows_per_frame = dna_amount;
 
 var _rung_columns = ceil(dna_amount / dna_rung_spacing);
 
@@ -5138,6 +5137,129 @@ dna_structures[1] = {
   dir : -1,
   angle_offset : pi,
   mirror : -1
+};
+
+_k_dna_spawn_t = _k_arc_rift_t;
+_k_dna_fade_frames = 34;
+_k_dna_phase_seed_t = 4990;
+_k_dna_phase_hide_t = 5219;
+_k_dna_phase_resume_t = 5965;
+
+dna_time_for_t = function(_time) {
+  var _frames = 0;
+  if (_time >= _k_dna_phase_seed_t) {
+    _frames += min(_time, _k_dna_phase_hide_t) - _k_dna_phase_seed_t + 1;
+  }
+  if (_time > _k_dna_phase_resume_t) {
+    _frames += _time - _k_dna_phase_resume_t;
+  }
+  return max(0, _frames) * 0.04;
+};
+
+dna_spawn_fully_active = function() {
+  if (dna_spawn_cursor >= dna_amount) return;
+
+  for (var i = 0; i < dna_amount; i++) {
+    for (var s = 0; s < array_length(dna_structures); s++) {
+      var _struct = dna_structures[s];
+      var _cx = _struct.center_x;
+      var _cy = _struct.center_y;
+
+      if (!instance_exists(_struct.array[i])) {
+        var _b = instance_create_layer(_cx, _cy, "Instances", oDNATest);
+        _b.dna_mode = true;
+        _b.dna_type = 0;
+        _b.dna_side = 0;
+        _b.dna_index = i;
+        _b.spawn_scale = 1;
+        _b.spawn_timer = 0;
+        _b.spawn_duration = 1;
+        _b.strand = 0;
+        _b.struct_id = s;
+        _b.dna_rung_spacing = dna_rung_spacing;
+        _b.rung_bullets = rung_bullets;
+        _b.chain_delay = chain_delay;
+        _b.chain_step = chain_step;
+        _b.chain_dir = 1;
+        _b.lightning_hit = true;
+        _b.active = true;
+        _b.state = "idle";
+        _b.hit_timer = 0;
+        _b.strike_flash = 0;
+        _b.line_life = 0;
+        _b.visible = true;
+        _struct.array[i] = _b;
+      }
+
+      if (!instance_exists(_struct.array[i + dna_amount])) {
+        var _b2 = instance_create_layer(_cx, _cy, "Instances", oDNATest);
+        _b2.dna_mode = true;
+        _b2.dna_type = 0;
+        _b2.dna_side = 1;
+        _b2.dna_index = i;
+        _b2.spawn_scale = 1;
+        _b2.spawn_timer = 0;
+        _b2.spawn_duration = 1;
+        _b2.strand = 1;
+        _b2.struct_id = s;
+        _b2.dna_rung_spacing = dna_rung_spacing;
+        _b2.rung_bullets = rung_bullets;
+        _b2.chain_delay = chain_delay;
+        _b2.chain_step = chain_step;
+        _b2.chain_dir = 1;
+        _b2.lightning_hit = true;
+        _b2.active = true;
+        _b2.state = "idle";
+        _b2.hit_timer = 0;
+        _b2.strike_flash = 0;
+        _b2.line_life = 0;
+        _b2.visible = true;
+        _struct.array[i + dna_amount] = _b2;
+      }
+
+      if (i mod dna_rung_spacing == 0) {
+        for (var r = 0; r < rung_bullets; r++) {
+          var _rung_index = dna_amount * 2 + floor(i / dna_rung_spacing) * rung_bullets + r;
+
+          if (!instance_exists(_struct.array[_rung_index])) {
+            var _rb = instance_create_layer(_cx, _cy, "Instances", oDNATest);
+            _rb.dna_mode = true;
+            _rb.dna_type = 2;
+            _rb.rung_id = i;
+            _rb.rung_position = r;
+            _rb.spawn_scale = 1;
+            _rb.spawn_timer = 0;
+            _rb.spawn_duration = 1;
+            _rb.strand = -1;
+            _rb.dna_index = -1;
+            _rb.struct_id = s;
+            _rb.dna_rung_spacing = dna_rung_spacing;
+            _rb.rung_bullets = rung_bullets;
+            _rb.chain_delay = chain_delay;
+            _rb.chain_step = chain_step;
+            _rb.rung_claimed = true;
+            _rb.rung_dir = 1;
+            _rb.chain_is_rung = false;
+            _rb.lightning_hit = true;
+            _rb.active = true;
+            _rb.state = "idle";
+            _rb.hit_timer = 0;
+            _rb.strike_flash = 0;
+            _rb.line_life = 0;
+            _rb.visible = true;
+            _struct.array[_rung_index] = _rb;
+          }
+        }
+      }
+    }
+  }
+
+  dna_spawn_cursor = dna_amount;
+  active_dna_rung_chains = 0;
+  dna_rung_queue = [];
+  dna_write_arcs = [];
+  dna_cross_arcs = [];
+  dna_chain_flash = 0;
 };
 
 _k_dna_despawn_t = 6527;

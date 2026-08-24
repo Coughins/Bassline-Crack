@@ -250,11 +250,54 @@ function set_t(_new_t){
     }
 }
 
+	var _dna_spawn_ready = variable_instance_exists(id, "_k_dna_spawn_t")
+	                   && variable_instance_exists(id, "_k_dna_despawn_t")
+	                   && variable_instance_exists(id, "dna_spawn_fully_active");
+	if (_dna_spawn_ready) {
+		if (_new_t < _k_dna_spawn_t) {
+			dna_active = false;
+			dna_fade_active = false;
+			dna_veil = 0;
+			dna_spawn_cursor = 0;
+			active_dna_rung_chains = 0;
+			dna_rung_queue = [];
+			dna_write_arcs = [];
+			dna_cross_arcs = [];
+			dna_chain_flash = 0;
+
+			with (oDNATest) {
+				if (dna_mode) instance_destroy();
+			}
+
+			for (var _dns = 0; _dns < array_length(dna_structures); _dns++) {
+				var _dna_slots_pre = array_length(dna_structures[_dns].array);
+				for (var _dni = 0; _dni < _dna_slots_pre; _dni++) {
+					dna_structures[_dns].array[_dni] = -4;
+				}
+			}
+		} else if (_new_t < _k_dna_despawn_t) {
+			dna_active = true;
+			dna_fade_active = (_new_t < _k_dna_spawn_t + _k_dna_fade_frames);
+			dna_fade_start_t = _k_dna_spawn_t;
+			dna_veil = dna_fade_active
+			         ? power(clamp((_new_t - _k_dna_spawn_t) / max(_k_dna_fade_frames, 1), 0, 1), 1.35)
+			         : 1;
+			active_dna_rung_chains = 0;
+			dna_rung_queue = [];
+			dna_write_arcs = [];
+			dna_cross_arcs = [];
+			dna_chain_flash = 0;
+			if (!instance_exists(oDNATest)) dna_spawn_cursor = 0;
+			dna_spawn_fully_active();
+		}
+	}
+
 	var _dna_despawn_ready = variable_instance_exists(id, "_k_dna_despawn_t")
 	                      && variable_instance_exists(id, "_k_dna_despawn_duration");
 	if (_dna_despawn_ready && _new_t > _k_dna_despawn_t) {
 		dna_active = false;
-		dna_write_p = 1;
+		dna_fade_active = false;
+		dna_veil = 1;
 		active_dna_rung_chains = 0;
 		dna_rung_queue = [];
 		dna_write_arcs = [];
