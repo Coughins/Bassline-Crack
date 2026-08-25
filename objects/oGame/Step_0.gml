@@ -79,6 +79,13 @@ if (global.game_playing) {
 		savedata_set_active("time", savedata_get_active("time") + f2sec(1))
 
 		if (input_check_pressed("retry")) {
+			if (variable_global_exists("avoidance_practice_active") &&
+			    global.avoidance_practice_active) {
+				if (!variable_global_exists("avoidance_practice_stamp_seed"))
+					global.avoidance_practice_stamp_seed = 0
+				global.avoidance_practice_stamp_seed = irandom(999999)
+			}
+
 			audio_stop_all()
 			savedata_save("death", "time")
 			savedata_load()

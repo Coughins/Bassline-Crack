@@ -1877,6 +1877,7 @@ _k_stamp_row_base = 16;
 
 _k_stamp_arch_rows = 2;
 _k_stamp_mid_rows = 4;
+_k_stamp_escape_row = 3;
 _k_stamp_reach_y = 412;
 
 _k_stamp_mid_chance = 0.42;
@@ -1888,6 +1889,7 @@ _k_stamp_orb_fade = 24;
 _k_stamp_orb_spread = 10;
 
 _k_stamp_spawn_clear = 58;
+_k_stamp_bottom_quota = 4;
 
 _k_stamp_window_margin = 8;
 
@@ -1969,6 +1971,21 @@ stamp_col_blocked = function(_i) {
          (_cx - _half < _k_stamp_safe_x1 + _k_stamp_orb_r);
 };
 
+stamp_pick_grid_seed = function() {
+  if (variable_global_exists("debug_stamp_seed") && global.debug_stamp_seed != 0) {
+    return global.debug_stamp_seed;
+  }
+
+  if (variable_global_exists("avoidance_practice_active") &&
+      global.avoidance_practice_active &&
+      variable_global_exists("avoidance_practice_stamp_seed") &&
+      global.avoidance_practice_stamp_seed != 0) {
+    return global.avoidance_practice_stamp_seed;
+  }
+
+  return irandom(999999);
+};
+
 stamp_build_grid = function(_seed) {
   var _prev = random_get_seed();
   random_set_seed(_seed);
@@ -2037,6 +2054,7 @@ stamp_build_grid = function(_seed) {
     var _flight_clear = (_type == STAMP_OPEN || _type == STAMP_DUCK);
     if (_flight_clear) {
       for (var _m = _k_stamp_arch_rows; _m < _k_stamp_mid_rows; _m++) {
+        if (_m == _k_stamp_escape_row) continue;
         if (random(1) < _k_stamp_mid_chance) array_push(_rows, _m);
       }
     }
@@ -2071,61 +2089,98 @@ stamp_build_grid = function(_seed) {
   random_set_seed(_prev);
 };
 
-stamp_ensure_floor_block = function(_px, _py) {
-  var _has_left = false;
-  var _has_right = false;
-
+stamp_has_orb_cell = function(_col, _row) {
   for (var _i = 0; _i < array_length(stamp_orbs); _i++) {
-    if (stamp_orbs[_i].row != 0) continue;
-    if (stamp_orbs[_i].x < _k_stamp_mid_x) _has_left = true;
-    else _has_right = true;
+    if (stamp_orbs[_i].col == _col && stamp_orbs[_i].row == _row) return true;
   }
 
-  if (_has_left && _has_right) return;
+  return false;
+};
+
+stamp_has_bottom_orb_in_col = function(_col) {
+  for (var _i = 0; _i < array_length(stamp_orbs); _i++) {
+    if (stamp_orbs[_i].col == _col && stamp_orbs[_i].row < _k_stamp_arch_rows) return true;
+  }
+
+  return false;
+};
+
+stamp_push_orb = function(_col, _row, _type) {
+  var _cx = stamp_grid_x(_col);
+  var _wall_d = min(_cx - _k_stamp_x0, _k_stamp_x1 - _cx);
+
+  array_push(stamp_orbs, {
+    col : _col,
+    row : _row,
+    type : _type,
+    x : _cx,
+    y : stamp_grid_y(_row),
+    seed : random(1000),
+    spin : random_range(-1.4, 1.4),
+    spawn : 0,
+    delay : (1 - clamp(_wall_d / 260, 0, 1)) * _k_stamp_orb_spread,
+    flare : 0,
+    pulse : 0,
+    crushed : false
+  });
+};
+
+stamp_ensure_bottom_band_quota = function(_px, _py, _seed) {
+  var _prev = random_get_seed();
+  random_set_seed(_seed + 73091);
+
+  var _bottom_count = [ 0, 0 ];
+
+  for (var _i = 0; _i < array_length(stamp_orbs); _i++) {
+    var _orb = stamp_orbs[_i];
+    if (_orb.row >= _k_stamp_arch_rows) continue;
+
+    var _side_i = (_orb.x < _k_stamp_mid_x) ? 0 : 1;
+    _bottom_count[_side_i]++;
+  }
 
   for (var _side = 0; _side < 2; _side++) {
     var _want_left = (_side == 0);
-    if (_want_left && _has_left) continue;
-    if (!_want_left && _has_right) continue;
 
-    var _best_col = -1;
-    var _best_d = -1;
+    while (_bottom_count[_side] < _k_stamp_bottom_quota) {
+      var _best_col = -1;
+      var _best_row = -1;
+      var _best_score = -1000000;
 
-    for (var _i = 0; _i < _k_stamp_grid_cols; _i++) {
-      var _runway = (_i < _k_stamp_wall_runway) ||
-                    (_i >= _k_stamp_grid_cols - _k_stamp_wall_runway);
-      if (_runway || stamp_col_blocked(_i)) continue;
+      for (var _i2 = 0; _i2 < _k_stamp_grid_cols; _i2++) {
+        var _runway = (_i2 < _k_stamp_wall_runway) ||
+                      (_i2 >= _k_stamp_grid_cols - _k_stamp_wall_runway);
+        if (_runway || stamp_col_blocked(_i2)) continue;
 
-      var _cx = stamp_grid_x(_i);
-      if ((_cx < _k_stamp_mid_x) != _want_left) continue;
+        var _cx = stamp_grid_x(_i2);
+        if ((_cx < _k_stamp_mid_x) != _want_left) continue;
 
-      var _d = point_distance(_cx, stamp_grid_y(0), _px, _py);
-      if (_d > _best_d) {
-        _best_d = _d;
-        _best_col = _i;
+        var _paired_penalty = stamp_has_bottom_orb_in_col(_i2) ? 80 : 0;
+
+        for (var _row = 0; _row < _k_stamp_arch_rows; _row++) {
+          if (stamp_has_orb_cell(_i2, _row)) continue;
+
+          var _cy = stamp_grid_y(_row);
+          var _d = point_distance(_cx, _cy, _px, _py);
+          if (_d < _k_stamp_spawn_clear) continue;
+
+          var _score = _d - _paired_penalty + random(18);
+          if (_score > _best_score) {
+            _best_score = _score;
+            _best_col = _i2;
+            _best_row = _row;
+          }
+        }
       }
+
+      if (_best_col == -1) break;
+
+      stamp_push_orb(_best_col, _best_row, (_best_row == 0) ? STAMP_HOP : STAMP_DUCK);
+      _bottom_count[_side]++;
     }
-
-    if (_best_col == -1 || _best_d < _k_stamp_spawn_clear) continue;
-
-    var _fcx = stamp_grid_x(_best_col);
-    var _wall_d = min(_fcx - _k_stamp_x0, _k_stamp_x1 - _fcx);
-
-    array_push(stamp_orbs, {
-      col : _best_col,
-      row : 0,
-      type : STAMP_HOP,
-      x : _fcx,
-      y : stamp_grid_y(0),
-      seed : random(1000),
-      spin : random_range(-1.4, 1.4),
-      spawn : 0,
-      delay : (1 - clamp(_wall_d / 260, 0, 1)) * _k_stamp_orb_spread,
-      flare : 0,
-      pulse : 0,
-      crushed : false
-    });
   }
+
+  random_set_seed(_prev);
 };
 
 if (array_length(_k_stamp_beats) != array_length(_k_stamp_advance)) {

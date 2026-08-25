@@ -47,6 +47,7 @@ global.avoidance_practice_active = false
 global.avoidance_practice_t = 0
 global.avoidance_practice_name = ""
 global.avoidance_practice_return_menu = false
+global.avoidance_practice_stamp_seed = 0
 
 global.avoid_col_blood       = make_color_rgb(96, 8, 18)
 global.avoid_col_danger      = make_color_rgb(255, 42, 38)

@@ -29,6 +29,13 @@ if (keyboard_check_pressed(vk_f1))
 
 if (keyboard_check_pressed(ord("R")))
 {
+    if (variable_global_exists("avoidance_practice_active") &&
+        global.avoidance_practice_active) {
+        if (!variable_global_exists("avoidance_practice_stamp_seed"))
+            global.avoidance_practice_stamp_seed = 0;
+        global.avoidance_practice_stamp_seed = irandom(999999);
+    }
+
     if (selected_category >= 0 && selected_category < array_length(scroll_offset_by_category))
     {
         scroll_offset_by_category[selected_category] = scroll_offset;

@@ -4565,11 +4565,7 @@ if
       stamp_arcs = [];
       stamp_tips = [];
 
-      if (variable_global_exists("debug_stamp_seed") && global.debug_stamp_seed != 0) {
-        stamp_grid_seed = global.debug_stamp_seed;
-      } else {
-        stamp_grid_seed = irandom(999999);
-      }
+      stamp_grid_seed = stamp_pick_grid_seed();
       stamp_build_grid(stamp_grid_seed);
 
       if (instance_exists(oPlayer)) {
@@ -4580,7 +4576,7 @@ if
           }
         }
 
-        stamp_ensure_floor_block(oPlayer.x, oPlayer.y);
+        stamp_ensure_bottom_band_quota(oPlayer.x, oPlayer.y, stamp_grid_seed);
       }
 
       for (var _mm = 0; _mm < 36; _mm++) {

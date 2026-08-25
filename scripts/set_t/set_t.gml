@@ -152,13 +152,20 @@ function set_t(_new_t){
 		stamp_player_safe = false;
 
 		if (stamp_grid_seed == 0) {
-			if (variable_global_exists("debug_stamp_seed") && global.debug_stamp_seed != 0) {
-				stamp_grid_seed = global.debug_stamp_seed;
-			} else {
-				stamp_grid_seed = irandom(999999);
-			}
+			stamp_grid_seed = stamp_pick_grid_seed();
 		}
 		stamp_build_grid(stamp_grid_seed);
+
+		if (instance_exists(oPlayer)) {
+			for (var _cl = array_length(stamp_orbs) - 1; _cl >= 0; _cl--) {
+				var _cn = stamp_orbs[_cl];
+				if (point_distance(_cn.x, _cn.y, oPlayer.x, oPlayer.y) < _k_stamp_spawn_clear) {
+					array_delete(stamp_orbs, _cl, 1);
+				}
+			}
+
+			stamp_ensure_bottom_band_quota(oPlayer.x, oPlayer.y, stamp_grid_seed);
+		}
 
 		for (var _so = 0; _so < array_length(stamp_orbs); _so++) {
 			var _son = stamp_orbs[_so];

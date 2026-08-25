@@ -60,6 +60,7 @@ if (!variable_global_exists("avoidance_practice_active")) global.avoidance_pract
 if (!variable_global_exists("avoidance_practice_t")) global.avoidance_practice_t = 0;
 if (!variable_global_exists("avoidance_practice_name")) global.avoidance_practice_name = "";
 if (!variable_global_exists("avoidance_practice_return_menu")) global.avoidance_practice_return_menu = false;
+if (!variable_global_exists("avoidance_practice_stamp_seed")) global.avoidance_practice_stamp_seed = 0;
 if (!variable_global_exists("debug_restart_t")) global.debug_restart_t = 0;
 if (!variable_global_exists("debug_resume_t")) global.debug_resume_t = 0;
 
@@ -129,6 +130,7 @@ hub_start_practice = function(_marker) {
     global.avoidance_practice_active = true;
     global.avoidance_practice_t = _marker.t;
     global.avoidance_practice_name = _marker.name;
+    global.avoidance_practice_stamp_seed = 0;
     global.debug_restart_t = 0;
     global.debug_resume_t = _marker.t;
 
