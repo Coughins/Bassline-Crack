@@ -13420,7 +13420,9 @@ if (kdash_active) {
     kdash_rift_x = irandom_range(140, room_width - 140);
     kdash_rift_x_prev = kdash_rift_x;
 
-    repeat (9) {
+    kdash_spawn_credit = 0;
+
+    repeat (round(9 * _k_kdash_blade_density_mult)) {
       var _seed = instance_create_layer(irandom_range(20, room_width - 20),
                                         irandom_range(-30, 40), "Instances", oRedKunaiDash);
       _seed.fall_speed = _k_kdash_fall_speed_start;
@@ -13487,37 +13489,46 @@ if (kdash_active) {
   if (kdash_coil > 0.65) _kd_interval = max(2, _kd_interval + 2);
 
   if (t mod _kd_interval == 0) {
-    var _kd_hot_x = lerp(kdash_rift_x_prev, kdash_rift_x, kdash_rift_slide);
+    var _kd_spawn_reps = 1;
+    kdash_spawn_credit += _k_kdash_blade_density_mult - 1;
+    if (kdash_spawn_credit >= 1) {
+      _kd_spawn_reps++;
+      kdash_spawn_credit -= 1;
+    }
 
-    var _kd_spawn_x = (random(1) < 0.45)
-        ? clamp(_kd_hot_x + random_range(-_k_kdash_rift_width, _k_kdash_rift_width), 8, room_width - 8)
-        : irandom_range(8, room_width - 8);
+    repeat (_kd_spawn_reps) {
+      var _kd_hot_x = lerp(kdash_rift_x_prev, kdash_rift_x, kdash_rift_slide);
 
-    var _kd_new = instance_create_layer(_kd_spawn_x, -14, "Instances", oRedKunaiDash);
-    _kd_new.fall_speed = lerp(_k_kdash_fall_speed_start, _k_kdash_fall_speed_end, _kd_esc);
-    _kd_new.speed = _kd_new.fall_speed;
-    _kd_new.direction = 270;
-    _kd_new.spawn_pop = 1;
+      var _kd_spawn_x = (random(1) < 0.45)
+          ? clamp(_kd_hot_x + random_range(-_k_kdash_rift_width, _k_kdash_rift_width), 8, room_width - 8)
+          : irandom_range(8, room_width - 8);
 
-    if (array_length(kdash_sockets) < _k_kdash_socket_cap) {
-      array_push(kdash_sockets, {
-        x : _kd_spawn_x,
-        life : 16,
-        life_max : 16,
-        hot : 0.48 + _kd_esc * 0.35,
-        recoil : 0.35,
-        charge : 0.24 + _kd_esc * 0.25,
+      var _kd_new = instance_create_layer(_kd_spawn_x, -14, "Instances", oRedKunaiDash);
+      _kd_new.fall_speed = lerp(_k_kdash_fall_speed_start, _k_kdash_fall_speed_end, _kd_esc);
+      _kd_new.speed = _kd_new.fall_speed;
+      _kd_new.direction = 270;
+      _kd_new.spawn_pop = 1;
+
+      if (array_length(kdash_sockets) < _k_kdash_socket_cap) {
+        array_push(kdash_sockets, {
+          x : _kd_spawn_x,
+          life : 16,
+          life_max : 16,
+          hot : 0.48 + _kd_esc * 0.35,
+          recoil : 0.35,
+          charge : 0.24 + _kd_esc * 0.25,
+          seed : random(1000)
+        });
+      }
+
+      array_push(kdash_arcs, {
+        x1 : _kd_spawn_x, y1 : 0,
+        x2 : _kd_spawn_x + random_range(-26, 26), y2 : random_range(16, 40),
+        life : 6, life_max : 6,
+        hot : 0.55 + random(0.35),
         seed : random(1000)
       });
     }
-
-    array_push(kdash_arcs, {
-      x1 : _kd_spawn_x, y1 : 0,
-      x2 : _kd_spawn_x + random_range(-26, 26), y2 : random_range(16, 40),
-      life : 6, life_max : 6,
-      hot : 0.55 + random(0.35),
-      seed : random(1000)
-    });
   }
 
   if (_kd_next >= 0 && t == _kd_next - _k_kdash_coil_lead) {
