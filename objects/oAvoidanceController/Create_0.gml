@@ -1004,6 +1004,7 @@ _k_rain_start = 378;
 _k_rain_end = 626;
 _k_rain_interval_start = 20;
 _k_rain_interval_end = 11;
+_k_rain_amount_mult = 1.6;
 _k_big_kunai_spawn_t = 500;
 _k_big_kunai_telegraph_lead = 14;
 _k_big_kunai_notes = [ 623, 643, 662, 681 ];

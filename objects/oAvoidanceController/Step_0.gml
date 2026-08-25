@@ -2527,7 +2527,7 @@ if (t >= _k_rain_start && t < 700) {
   if (_rain_on) {
     var _speed_min = lerp(5, 10, _rain_p);
     var _speed_max = lerp(9, 13, _rain_p) + (_rain_p * 5);
-    var _count = floor(lerp(5, 3, _rain_p));
+    var _count = round(lerp(5, 3, _rain_p) * _k_rain_amount_mult);
     var _interval = max(4, round(lerp(_k_rain_interval_start, _k_rain_interval_end, _rain_p)));
 
     rain_spawn_timer--;
