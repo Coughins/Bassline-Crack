@@ -3488,6 +3488,7 @@ orb_volley_jump_band_y = room_height - 130;
 _k_orb_volley_count = 15;
 _k_orb_volley_travel_frames = 22;
 _k_orb_volley_stagger_max = 10;
+_k_orb_volley_ready_lead_frames = 5;
 _k_orb_volley_color = global.avoid_col_warning;
 _k_orb_volley_trail_length = 8;
 _k_orb_volley_lock_on_frames = 8;
@@ -3919,6 +3920,7 @@ _k_bh_finale_kunai_fx_mult = 0.42;
 _k_bh_finale_kunai_glow_mult = 0.28;
 _k_bh_finale_kunai_light_mult = 0.35;
 _k_bh_bullet_density = 0.80;
+_k_bh_white_rain_speed_mult = 0.80;
 
 bh_phase_charge = 0;
 bh_heartbeat = 0;

@@ -7030,6 +7030,7 @@ if true {
 	      delay: irandom(_k_orb_volley_stagger_max),
 	      timer: 0,
 	      trail: [],
+	      ready: false,
 	      orb: _orb
 	    });
 	  }
@@ -7075,7 +7076,8 @@ if true {
 	    array_push(_s.trail, {x: _prev_x, y: _prev_y});
 	    if (array_length(_s.trail) > _k_orb_volley_trail_length) array_delete(_s.trail, 0, 1);
 
-	    if (_prog >= 1) {
+	    if (!_s.ready && _s.timer >= max(1, _k_orb_volley_travel_frames - _k_orb_volley_ready_lead_frames)) {
+	      _s.ready = true;
 	      if (instance_exists(_s.orb)) {
 	        with (_s.orb) {
 	          laser_pop_enabled = true;
@@ -7083,6 +7085,18 @@ if true {
 	      }
 
 	      array_push(orb_volley_bursts, {x: _s.tx, y: _s.ty, life: 14, life_max: 14, max_radius: 40});
+	    }
+
+	    if (_prog >= 1) {
+	      if (!_s.ready && instance_exists(_s.orb)) {
+	        with (_s.orb) {
+	          laser_pop_enabled = true;
+	        }
+	      }
+
+	      if (!_s.ready) {
+	        array_push(orb_volley_bursts, {x: _s.tx, y: _s.ty, life: 14, life_max: 14, max_radius: 40});
+	      }
 
 	      var _land_back = point_direction(_s.tx, _s.ty, _s.ox, _s.oy);
 	      for (var _ls = 0; _ls < 5; _ls++) {
@@ -8138,7 +8152,7 @@ if (t >= 1735 && t < 1840) {
 }
 
 if (timeline_hit_many(1712, 1733, 1752, 1773, 1793, 1814, 1835)) {
-  var _k_rain_burst_count     = [ 2,     3,     4,     5,     6,     7,     10    ];
+  var _k_rain_burst_count     = [ 8,     10,    12,    14,    16,    18,    20    ];
   var _k_rain_burst_shake     = [ 3,     4,     6,     8,     10,    12,    18    ];
   var _k_rain_burst_hailstone = [ false, false, true,  true,  true,  true,  true  ];
 
@@ -12120,11 +12134,12 @@ if (_bh_rain_now && !bullets_rewinding) {
   var _rain_e = _bh_rain_i / max(array_length(bh_rain_beats) - 1, 1);
 
   var _rain_n = max(1, round((2 + floor(_rain_e * 3.2)) * _k_bh_bullet_density));
+  var _rain_speed_mult = blackhole_push_mode ? _k_bh_white_rain_speed_mult : 1;
   for (var r = 0; r < _rain_n; r++) {
     var _x = random_range(0, room_width);
     var _o = instance_create_layer(_x, -20, layer, oBlackHoleBullet);
     _o.direction = 270 + random_range(-20, 20);
-    _o.speed = random_range(3, 5) * (1 + _rain_e * 0.55);
+    _o.speed = random_range(3, 5) * (1 + _rain_e * 0.55) * _rain_speed_mult;
     _o.rain_escalation = _rain_e;
   }
 
