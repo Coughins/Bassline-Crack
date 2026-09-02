@@ -17,7 +17,7 @@ window.SECTIONS = [
   { t:1364, name:"Laser Attacks",        act:2, w:"major", img:"09_laser_attacks", mark:"drop",
     copy:"The drop. The laser passes over the orbs and switches them on, and every orb it touches turns lethal." },
   { t:1691, name:"Falling Red Orbs",     act:2, w:"minor", img:"10_falling_red_orbs",
-    copy:"Gravity turns over. The bass knocks orbs off the wall and they come down at you." },
+    copy:"The bass knocks orbs off the wall and they come down at you." },
   { t:2025, name:"Embers",               act:2, w:"minor", img:"12_red_orbs_embers",
     copy:"Three implosions, each one pulling the embers tighter than the last." },
   { t:2326, name:"Eruption",             act:2, w:"hero",  loop:"eruption",
