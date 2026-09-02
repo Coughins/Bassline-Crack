@@ -25,7 +25,7 @@ window.SECTIONS = [
   { t:2597, name:"Black Holes",          act:2, w:"hero",  loop:"blackholes",
     copy:"Eighty-four frames of musical silence, then two singularities that bend everything on screen." },
   { t:3331, name:"Dashing Kunai",        act:2, w:"minor", img:"16_dashing_kunai",
-    copy:"Kunai fill the room and hang there. On every beat a random half of them dash straight down." },
+    copy:"Kunai fill the room and travel down the whole time. On every beat a random half of them dash." },
   { t:3560, name:"Jump Rope + Push Orbs",act:2, w:"minor", img:"17_jump_rope",
     copy:"A rope of light sweeps the floor while the field leans you off your line." },
 
@@ -36,9 +36,9 @@ window.SECTIONS = [
   { t:5219, name:"The Duct",             act:3, w:"hero",  loop:"duct",
     copy:"A chase down a service shaft of that same machine. The cell unfolded into a cylinder, every seam hot, every junction lit." },
 
-  { t:5960, name:"Arrow Arc + Big Orb",  act:4, w:"major", img:"22_arrow_arc",
+  { t:5960, name:"Arrow Arc + Mitosis", act:4, w:"major", img:"22_arrow_arc",
     copy:"A containment cell that keeps rupturing, then builds itself a rig out of what is left." },
-  { t:6628, name:"Final Laser",          act:4, w:"minor", img:"23_final_laser",
+  { t:6628, name:"The Mill",             act:4, w:"minor", img:"23_final_laser",
     copy:"Red machine, cyan cutting edge." },
   { t:7291, name:"Final Cut",            act:4, w:"hero",  loop:"finalcut", mark:"cut",
     copy:"One stroke crosses the screen and the frame comes apart." }
