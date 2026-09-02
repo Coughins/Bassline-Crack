@@ -342,6 +342,9 @@ main{ position:relative; z-index:10; }
 .sec{
   position:relative; padding:78px 0;
   --bracket:var(--danger);
+  /* min-height is set per section from its duration (see app.js); centre
+     the content inside whatever height that produces */
+  display:flex; flex-direction:column; justify-content:center;
 }
 .sec[data-w="minor"]{ --bracket:var(--cyan); padding:52px 0; }
 .sec[data-w="hero"]{ padding:104px 0; }

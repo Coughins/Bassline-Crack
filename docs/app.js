@@ -15,6 +15,8 @@
 
   const SECTIONS = window.SECTIONS, RUN_END = window.RUN_END;
   const FPS = 60;
+  // run-length budget: ~2px of scroll per frame of song
+  const PX_PER_FRAME = 2.0, MIN_SEC_PX = 420, MAX_SEC_PX = 1750;
 
   /* ═══════════ 1. authored curves ═══════════
      Hand-keyed at the act boundaries so the drop and the cut land
@@ -154,6 +156,13 @@
       el.dataset.end = end;
       el.dataset.act = s.act;
       if (s.mark) el.dataset.mark = s.mark;
+
+      // Height tracks how long the section actually lasts, so scrolling
+      // advances `t` at a near-constant rate. Sizing cards by weight class
+      // alone made the clock lurch wherever a long section had a short card
+      // (worst case: leaving the 741-frame Duct into the next marker).
+      el.style.minHeight = clamp(Math.round((end - s.t) * PX_PER_FRAME),
+                                 MIN_SEC_PX, MAX_SEC_PX) + 'px';
 
       const media = s.loop
         ? `<video class="lp" playsinline muted loop preload="none"
