@@ -422,9 +422,15 @@ main{ position:relative; z-index:10; }
 .sec.in .sec-body{ transition-delay:.06s; }
 
 /* ── act-driven layout drift ── */
-#run[data-act="3"] .sec-inner{ gap:56px; }
-#run[data-act="4"] .sec{ padding-top:44px; padding-bottom:44px; }
-#run[data-act="4"] .sec[data-w="hero"]{ padding:80px 0; }
+/* Keyed off each section's OWN act, so these are static from build time.
+   Keying them off #run[data-act] instead made every card on the page
+   restyle the instant the act flipped: the document lost 774px in one
+   frame and the scroll position landed somewhere else. That was the jump
+   at the Duct / Arrow Arc boundary (t5960). Nothing that changes with
+   scroll may change layout. */
+.sec[data-act="3"] .sec-inner{ gap:56px; }
+.sec[data-act="4"]{ padding-top:44px; padding-bottom:44px; }
+.sec[data-act="4"][data-w="hero"]{ padding:80px 0; }
 
 
 /* after the cut — the page is severed and drains to nothing */
