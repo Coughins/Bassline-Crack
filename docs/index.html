@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en" data-boot="pending">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bassline Crack</title>
+<meta name="description" content="A two-minute music-synced avoidance. One song, thirty attacks, 7,470 frames. Avoid. Survive. Break the bassline.">
+<meta property="og:title" content="Bassline Crack">
+<meta property="og:description" content="One song. Two minutes five seconds. Thirty attacks. Avoid. Survive. Break the bassline.">
+<meta property="og:image" content="assets/ui/title_screen.webp">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#0A0605">
+<link rel="icon" href="assets/icons/bassline_crack_icon.ico">
+<link rel="apple-touch-icon" href="assets/icons/icon256.webp">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&family=Anton&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- ═══ ATMOSPHERE: single WebGL layer (honeycomb, dust, grid, vignette, chroma) ═══ -->
+<canvas id="atmosphere" aria-hidden="true"></canvas>
+<!-- ═══ FOREGROUND FX: second canvas, only live for hit events + the cut ═══ -->
+<canvas id="fx" aria-hidden="true"></canvas>
+
+<!-- ═══ PERSISTENT CHAMFERED FRAME ═══ -->
+<svg id="frame" aria-hidden="true" preserveAspectRatio="none">
+  <defs>
+    <linearGradient id="frameFade" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="currentColor" stop-opacity="1"/>
+      <stop offset="1" stop-color="currentColor" stop-opacity=".55"/>
+    </linearGradient>
+  </defs>
+  <g id="frame-edges"></g>
+  <g id="frame-corners"></g>
+  <g id="frame-ticks"></g>
+</svg>
+
+<!-- ═══ BOOT OVERLAY ═══ -->
+<div id="boot" aria-hidden="true">
+  <div class="boot-lines">
+    <span data-line="0">// LINK READY</span>
+    <span data-line="1">// SYSTEM READY</span>
+  </div>
+</div>
+
+<!-- ═══ CORNER READOUTS (persist across the whole page) ═══ -->
+<div class="readout readout--tl" aria-hidden="true">
+  <span id="ro-clock">BC--00:00</span>
+  <span id="ro-state">// SYSTEM READY</span>
+</div>
+<div class="readout readout--tr" aria-hidden="true">
+  <span>GETTY // BASSLINE CRACK</span>
+  <span id="ro-frame">t0000 / 7470</span>
+</div>
+
+<a href="#dl" class="skip-link">Skip to download</a>
+
+<main>
+
+  <!-- ══════════ STAGE 1 — TITLE ══════════ -->
+  <section id="title" class="stage" data-act="menu">
+    <div class="title-inner">
+
+      <div class="logo-wrap">
+        <svg class="logo" viewBox="0 0 620 250" role="img" aria-label="Bassline Crack">
+          <defs>
+            <mask id="tear">
+              <rect x="0" y="0" width="620" height="250" fill="#fff"/>
+              <g id="tear-bands" fill="#000"></g>
+            </mask>
+          </defs>
+          <g mask="url(#tear)">
+            <text class="logo-bass"  x="0" y="98">BASSLINE</text>
+            <text class="logo-crack" x="4" y="205">CRACK</text>
+          </g>
+        </svg>
+        <svg class="crack" viewBox="0 0 300 300" aria-hidden="true">
+          <g id="crack-lines"></g>
+          <circle id="crack-core" cx="150" cy="150" r="3"/>
+        </svg>
+      </div>
+
+      <p class="tagline">AVOID. SURVIVE. BREAK THE BASSLINE.</p>
+
+      <div class="cta-row">
+        <a class="cta" id="cta-top" href="https://mega.nz/file/vdd2hYJA#mMNveZQ-2b31a_iKeypwQvfYC9MiAz1aA90iuTQOiFk" rel="noopener">
+          <span class="cta-plus">+</span>
+          <span class="cta-label">DOWNLOAD</span>
+          <span class="cta-meta">WINDOWS · 43 MB</span>
+        </a>
+        <button class="audio-toggle" id="audio-toggle" aria-pressed="false">
+          <span class="spk" aria-hidden="true"></span>
+          <span>PREVIEW TRACK</span>
+        </button>
+      </div>
+
+      <div class="scroll-cue" aria-hidden="true">
+        <span>// BEGIN RUN</span>
+        <span class="chev">▼</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════ STAGE 2 — BRIEFING ══════════ -->
+  <section id="briefing" class="stage" data-act="menu">
+    <div class="wrap">
+      <h2 class="sec-head"><span class="bk"></span>WHAT THIS IS</h2>
+
+      <div class="brief-grid">
+        <div class="brief-copy">
+          <p class="lede">One song. Two minutes and five seconds. Thirty attacks, hand-built to the beat, and a character four pixels wide standing in the middle of them.</p>
+          <p>Bassline Crack is an <strong>avoidance</strong> — a single continuous set piece where the whole level is one track and every hazard is timed to it. You don't shoot anything. You don't have health. You read what the machine tells you is about to happen, and you move.</p>
+          <p>Every attack warns you before it can hurt you. Red means it will kill you. Cyan means it can't. The warning never grows into its own hitbox — it claims its full width on the first frame and only gets brighter.</p>
+        </div>
+
+        <figure class="notice-card">
+          <img src="assets/ui/notice.webp" alt="In-game notice: headphones are highly recommended; for your first playthrough the intended experience is hit count on." loading="lazy" width="800" height="608">
+          <figcaption>The game's own opening screen.</figcaption>
+        </figure>
+      </div>
+
+      <ul class="stats" id="stats">
+        <li><b>2:05</b><span>ONE TRACK</span></li>
+        <li><b>25</b><span>NAMED ATTACKS</span></li>
+        <li><b>7,470</b><span>FRAMES SCORED</span></li>
+        <li><b>60</b><span>FPS, LOCKED</span></li>
+      </ul>
+
+      <div class="modes">
+        <div class="mode">
+          <h3><span class="dot dot--cyan"></span>HIT COUNT</h3>
+          <p>Getting hit costs you a point, not the run. You always reach the end. Your score is how few times the song touched you — and it's the intended way to play it first.</p>
+        </div>
+        <div class="mode">
+          <h3><span class="dot dot--red"></span>LETHAL</h3>
+          <p>One touch ends it. The classic reading, and the reason there's a practice room in the hub with every section on a shortcut.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════ STAGE 3 — THE RUN ══════════ -->
+  <section id="run" aria-label="The run, section by section">
+
+    <div class="run-intro stage">
+      <div class="wrap">
+        <h2 class="sec-head sec-head--big"><span class="bk"></span>THE RUN</h2>
+        <p class="run-lede">Everything below happens in the order it happens, at the frame it happens. Scroll is the clock.</p>
+      </div>
+    </div>
+
+    <!-- fixed time rail -->
+    <nav id="rail" aria-label="Timeline">
+      <div class="rail-line"><div class="rail-fill" id="rail-fill"></div></div>
+      <div class="rail-ticks" id="rail-ticks"></div>
+      <div class="rail-head" id="rail-head">
+        <b id="rail-t">t0000</b>
+        <i id="rail-time">0:00</i>
+      </div>
+    </nav>
+
+    <!-- narrow screens: the rail collapses to a progress edge so the
+         timeline is never absent, only smaller -->
+    <div id="rail-mini" aria-hidden="true">
+      <div class="rm-bar"><div class="rm-fill" id="rm-fill"></div></div>
+      <div class="rm-label"><b id="rm-name">INTRO FADE-IN</b><i id="rm-t">t0000</i></div>
+    </div>
+
+    <div id="sections"></div>
+  </section>
+
+  <!-- ══════════ STAGE 4 — RESOLUTION / DOWNLOAD ══════════ -->
+  <section id="dl" class="stage" data-act="resolve">
+    <div class="wrap">
+      <div class="reboot-mark" aria-hidden="true">// SYSTEM READY</div>
+
+      <h2 class="sec-head"><span class="bk"></span>DOWNLOAD</h2>
+
+      <div class="dl-grid">
+        <div class="dl-main">
+          <a class="cta cta--lg" href="https://mega.nz/file/vdd2hYJA#mMNveZQ-2b31a_iKeypwQvfYC9MiAz1aA90iuTQOiFk" rel="noopener">
+            <span class="cta-plus">+</span>
+            <span class="cta-label">DOWNLOAD</span>
+            <span class="cta-meta">WINDOWS · 43 MB · NO INSTALLER</span>
+          </a>
+          <ul class="dl-notes">
+            <li>Unzip and run <code>Bassline Crack.exe</code>. Nothing is installed.</li>
+            <li>Arrow keys move, <kbd>Shift</kbd> jumps, <kbd>R</kbd> retries. Gamepad is supported.</li>
+            <li>Headphones recommended — the whole level is the song.</li>
+          </ul>
+        </div>
+
+        <!-- TRACK INFORMATION, in the game's own panel vocabulary -->
+        <aside class="track-panel">
+          <div class="tp-head"><span>+</span>TRACK INFORMATION<span>+</span></div>
+          <div class="tp-art">
+            <img src="assets/icons/icon256.webp" alt="" loading="lazy" width="256" height="256">
+          </div>
+          <dl>
+            <dt>TRACK</dt><dd>BASSLINE CRACK</dd>
+            <dt>ARTIST</dt><dd>GETTY</dd>
+            <dt>LENGTH</dt><dd>2:04.85</dd>
+          </dl>
+          <button class="audio-toggle audio-toggle--panel" id="audio-toggle-2" aria-pressed="false">
+            <span class="spk" aria-hidden="true"></span><span>PREVIEW 15s</span>
+          </button>
+          <div class="tp-wave" id="tp-wave" aria-hidden="true"></div>
+          <div class="tp-foot">* THANK YOU FOR PLAYING *</div>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="wrap foot-inner">
+      <span>BASSLINE CRACK — a GameMaker avoidance.</span>
+      <span>Music &ldquo;Bassline Crack&rdquo; by <b>GETTY</b>, used with permission.</span>
+      <span><a href="https://github.com/Coughins/Bassline-Crack" rel="noopener">Source on GitHub</a></span>
+    </div>
+  </footer>
+
+</main>
+
+<audio id="preview" preload="none" loop>
+  <source src="assets/audio/preview.opus" type="audio/ogg; codecs=opus">
+  <source src="assets/audio/preview.mp3" type="audio/mpeg">
+</audio>
+
+<script src="sections.js"></script>
+<script src="atmosphere.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
