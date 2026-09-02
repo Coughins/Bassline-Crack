@@ -244,19 +244,6 @@ main{ position:relative; z-index:10; }
   margin-top:11px; font-size:11px; letter-spacing:.2em; color:var(--rose); opacity:.8;
 }
 
-.stats{
-  list-style:none; margin:56px 0 0; padding:26px 0;
-  display:grid; grid-template-columns:repeat(4,1fr); gap:20px;
-  border-top:1px solid color-mix(in srgb,var(--accent) 24%,transparent);
-  border-bottom:1px solid color-mix(in srgb,var(--accent) 24%,transparent);
-}
-@media (max-width:720px){ .stats{ grid-template-columns:repeat(2,1fr); } }
-.stats li{ display:flex; flex-direction:column; gap:5px; }
-.stats b{
-  font-size:clamp(26px,4vw,38px); font-weight:700; color:#fff; line-height:1;
-  font-variant-numeric:tabular-nums;
-}
-.stats span{ font-size:10px; letter-spacing:.26em; color:var(--rose); }
 
 .modes{ margin-top:52px; display:grid; grid-template-columns:1fr 1fr; gap:30px; }
 @media (max-width:720px){ .modes{ grid-template-columns:1fr; } }
@@ -436,14 +423,6 @@ main{ position:relative; z-index:10; }
 #run[data-act="4"] .sec{ padding-top:44px; padding-bottom:44px; }
 #run[data-act="4"] .sec[data-w="hero"]{ padding:80px 0; }
 
-/* the breakdown: 84 frames of silence gets real emptiness */
-.rest-beat{
-  min-height:74vh; display:grid; place-items:center; text-align:center;
-}
-.rest-beat p{
-  max-width:34ch; font-size:13px; letter-spacing:.3em;
-  color:color-mix(in srgb,var(--rose) 70%,transparent); line-height:2.2;
-}
 
 /* after the cut — the page is severed and drains to nothing */
 .drain-beat{

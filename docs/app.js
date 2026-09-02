@@ -146,14 +146,6 @@
     SECTIONS.forEach((s, i) => {
       const end = (i + 1 < SECTIONS.length) ? SECTIONS[i + 1].t : RUN_END;
 
-      // the breakdown gets real emptiness before the Black Holes card
-      if (s.mark === 'rest') {
-        const rest = document.createElement('div');
-        rest.className = 'rest-beat';
-        rest.innerHTML = `<p>t2598 &mdash; t2657<br>EIGHTY&#8209;FOUR FRAMES<br>OF SILENCE</p>`;
-        frag.appendChild(rest);
-      }
-
       const el = document.createElement('article');
       el.className = 'sec';
       el.id = 'sec-' + s.t;
