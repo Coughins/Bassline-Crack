@@ -78,22 +78,138 @@
     }
     g.innerHTML = d;
 
-    // the crack epicenter — radiating fracture, white-hot core
-    const cl = $('#crack-lines');
-    let l = '';
-    for (let i = 0; i < 26; i++) {
-      const a   = (i / 26) * Math.PI * 2 + hash(i) * 0.5;
-      const len = 34 + hash(i * 3.7) * 116;
-      const bend = (hash(i * 5.1) - 0.5) * 0.55;
-      const x1 = 150 + Math.cos(a) * 6,  y1 = 150 + Math.sin(a) * 6;
-      const xm = 150 + Math.cos(a + bend * .4) * len * .55;
-      const ym = 150 + Math.sin(a + bend * .4) * len * .55;
-      const x2 = 150 + Math.cos(a + bend) * len, y2 = 150 + Math.sin(a + bend) * len;
-      l += `<polyline points="${x1.toFixed(1)},${y1.toFixed(1)} ${xm.toFixed(1)},${ym.toFixed(1)} ${x2.toFixed(1)},${y2.toFixed(1)}"
-             fill="none" stroke="var(--red)" stroke-width="${(0.5 + hash(i * 9) * 1.3).toFixed(2)}"
-             opacity="${(0.25 + hash(i * 2.3) * 0.6).toFixed(2)}"/>`;
+    buildCrack();
+  }
+
+  /* The crack: the page is torn open, so the fractures need mass, not
+     strokes. Each one is a tapered polygon that is wide at the impact and
+     comes to a hairline, filled near-black so it reads as a hole, with a
+     hot rim and bloom around it. Same idea as the game icon: dark plate,
+     split, glowing from inside. */
+  function buildCrack() {
+    const CX = 160, CY = 160;
+
+    // Jagged arm out from the epicentre. The heading is a sharp kink around
+    // the base angle plus a slow lean, rather than an accumulating random
+    // walk — a walk curls the fracture into an organic hook, and a crack
+    // travels roughly straight while stepping hard side to side.
+    function arm(ang, len, segs, jag, seed) {
+      const pts = [{ x: CX, y: CY }];
+      let lean = 0;
+      for (let i = 1; i <= segs; i++) {
+        lean += (hash(seed + i * 5.3) - 0.5) * jag * 0.30;
+        const kink = (hash(seed + i * 3.1) - 0.5) * jag * 1.7;
+        const a = ang + lean + kink;
+        const step = (len / segs) * (0.55 + hash(seed + i * 7.7) * 0.9);
+        const p = pts[i - 1];
+        pts.push({ x: p.x + Math.cos(a) * step, y: p.y + Math.sin(a) * step });
+      }
+      return pts;
     }
-    cl.innerHTML = l;
+
+    // give a polyline a body: wide at the head, tapering to a point
+    function taper(pts, w0, w1) {
+      const L = [], R = [], n = pts.length - 1;
+      for (let i = 0; i <= n; i++) {
+        const p = pts[i];
+        const a = pts[Math.max(0, i - 1)], b = pts[Math.min(n, i + 1)];
+        let dx = b.x - a.x, dy = b.y - a.y;
+        const d = Math.hypot(dx, dy) || 1; dx /= d; dy /= d;
+        const w = (w0 + (w1 - w0) * Math.pow(i / n, 0.55)) * 0.5;
+        L.push([p.x - dy * w, p.y + dx * w]);
+        R.push([p.x + dy * w, p.y - dx * w]);
+      }
+      const all = L.concat(R.reverse());
+      return 'M' + all.map(p => p[0].toFixed(1) + ' ' + p[1].toFixed(1)).join('L') + 'Z';
+    }
+
+    const line = pts => 'M' + pts.map(p => p.x.toFixed(1) + ' ' + p.y.toFixed(1)).join('L');
+
+    const bodies = [];   // filled fracture polygons
+    const hairs  = [];   // hairline continuations and fine splits
+    const shards = [];   // chips knocked loose around the impact
+
+    // Seven fractures, but two of them carry most of the damage. Even
+    // weighting reads as a spider web; one dominant split reads as a hit.
+    const N = 7;
+    const DOMINANT = [1, 4];
+    for (let i = 0; i < N; i++) {
+      const seed = i * 37 + 5;
+      const big  = DOMINANT.indexOf(i) >= 0;
+      const ang  = (i / N) * Math.PI * 2 + (hash(seed) - 0.5) * 0.95;
+      const len  = big ? 150 + hash(seed + 2) * 60 : 74 + hash(seed + 2) * 64;
+      const pts  = arm(ang, len, big ? 9 : 5, big ? 0.5 : 0.72, seed);
+      const w0   = big ? 34 + hash(seed + 4) * 16 : 11 + hash(seed + 4) * 9;
+      bodies.push({ d: taper(pts, w0, big ? 1.4 : 0.8), w: w0 });
+
+      // the fracture keeps going as a hairline past where it has width
+      const tip  = pts[pts.length - 1];
+      const tail = arm(ang + (hash(seed + 9) - 0.5) * 0.7, 34 + hash(seed + 6) * 46, 3, 0.85, seed + 21);
+      hairs.push(line(tail.map(p => ({ x: p.x - CX + tip.x, y: p.y - CY + tip.y }))));
+
+      // one or two branches, thinner, splitting off mid-arm
+      const nb = 1 + (hash(seed + 11) > 0.55 ? 1 : 0);
+      for (let b = 0; b < nb; b++) {
+        const at = pts[2 + b];
+        const ba = ang + (hash(seed + b * 13 + 3) - 0.5) * 1.9;
+        const bp = arm(ba, 30 + hash(seed + b * 5) * 46, 4, 0.7, seed + b * 17 + 31)
+                     .map(p => ({ x: p.x - CX + at.x, y: p.y - CY + at.y }));
+        bodies.push({ d: taper(bp, (big ? 11 : 4.5) + hash(seed + b) * 5, 0.6), w: 3 });
+      }
+    }
+
+    // fine radial splits, no body
+    for (let i = 0; i < 11; i++) {
+      const s = i * 11 + 101;
+      hairs.push(line(arm((i / 11) * Math.PI * 2 + hash(s) * 0.9,
+                          20 + hash(s + 3) * 40, 3, 1.0, s)));
+    }
+
+    // displaced chips near the impact
+    for (let i = 0; i < 9; i++) {
+      const s = i * 19 + 7;
+      const a = hash(s) * Math.PI * 2;
+      const r = 16 + hash(s + 1) * 46;
+      const px = CX + Math.cos(a) * r, py = CY + Math.sin(a) * r;
+      const sz = 2.6 + hash(s + 2) * 6.5;
+      const p = [];
+      const k = 3 + Math.floor(hash(s + 5) * 2);
+      for (let v = 0; v < k; v++) {
+        const va = (v / k) * Math.PI * 2 + hash(s + v) * 1.5;
+        const vr = sz * (0.45 + hash(s + v * 3) * 0.85);
+        p.push((px + Math.cos(va) * vr).toFixed(1) + ' ' + (py + Math.sin(va) * vr).toFixed(1));
+      }
+      shards.push('M' + p.join('L') + 'Z');
+    }
+
+    const bodyD = bodies.map(b => b.d).join(' ');
+    const hairD = hairs.join(' ');
+
+    // bloom under everything, then the hole, then the hot rim
+    $('#ck-bloom').innerHTML =
+      `<path d="${bodyD}" fill="#FF2A26" opacity=".26" filter="url(#ckWide)"/>` +
+      `<circle cx="${CX}" cy="${CY}" r="24" fill="#FF541C" opacity=".34" filter="url(#ckWide)"/>`;
+    $('#ck-glow').innerHTML =
+      `<path d="${bodyD}" fill="#FF2A26" opacity=".42" filter="url(#ckSoft)"/>`;
+    // the hole itself: darker than the page, so it reads as missing material
+    $('#ck-void').innerHTML =
+      `<path d="${bodyD}" fill="#000"/>`;
+    // rim carries the heat. Thick red edge, thin hot inner line.
+    $('#ck-rim').innerHTML =
+      `<path d="${bodyD}" fill="none" stroke="#FF2E48" stroke-width="1.5" opacity=".98"/>` +
+      `<path d="${bodyD}" fill="none" stroke="#FFD8B8" stroke-width=".55" opacity=".55"/>`;
+    $('#ck-shards').innerHTML =
+      shards.map((d, i) => `<path d="${d}" fill="#0A0605" stroke="#FF2A26" stroke-width=".7" opacity="${(0.5 + hash(i * 3) * 0.5).toFixed(2)}"/>`).join('');
+    $('#ck-hair').innerHTML =
+      `<path d="${hairD}" fill="none" stroke="#FF2A26" stroke-width=".85" opacity=".62"/>`;
+
+    // white-hot core, with the four-point flare the game uses on impacts
+    $('#ck-core').innerHTML =
+      `<circle cx="${CX}" cy="${CY}" r="17" fill="#FF541C" opacity=".55" filter="url(#ckSoft)"/>` +
+      `<path d="M${CX - 58} ${CY}L${CX} ${CY - 5}L${CX + 58} ${CY}L${CX} ${CY + 5}Z" fill="#FFD8B8" opacity=".55" filter="url(#ckSoft)"/>` +
+      `<path d="M${CX} ${CY - 46}L${CX + 4} ${CY}L${CX} ${CY + 46}L${CX - 4} ${CY}Z" fill="#FFD8B8" opacity=".45" filter="url(#ckSoft)"/>` +
+      `<circle cx="${CX}" cy="${CY}" r="5.5" fill="#fff"/>` +
+      `<circle cx="${CX}" cy="${CY}" r="11" fill="#fff" opacity=".3" filter="url(#ckSoft)"/>`;
   }
   // the game's own hash, same constants (draw_menu_title_hash)
   function hash(v) { const n = Math.sin(v * 12.9898 + 78.233) * 43758.5453; return n - Math.floor(n); }

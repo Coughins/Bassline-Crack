@@ -145,15 +145,15 @@ main{ position:relative; z-index:10; }
 }
 
 .crack{
-  position:absolute; right:6%; top:-4%;
-  width:42%; height:auto; aspect-ratio:1; pointer-events:none; overflow:visible;
+  position:absolute; right:2%; top:-16%;
+  width:66%; height:auto; aspect-ratio:1; pointer-events:none; overflow:visible;
 }
-/* the epicenter must not push the page wider than the viewport */
+/* Only the light layers blend additively. Screening the whole SVG made the
+   black void a no-op, so the tear had no hole in it. */
+#ck-bloom,#ck-glow,#ck-core,#ck-hair{ mix-blend-mode:screen; }
 @media (max-width:640px){
-  .crack{ right:-2%; width:40%; }
+  .crack{ right:-4%; top:-12%; width:56%; }
 }
-.crack #crack-lines line{ stroke:var(--red); stroke-width:1.15; }
-#crack-core{ fill:#fff; filter:drop-shadow(0 0 7px var(--red)); }
 
 .tagline{
   margin:32px 0 0;

@@ -76,9 +76,22 @@
             <text class="logo-crack" x="4" y="205">CRACK</text>
           </g>
         </svg>
-        <svg class="crack" viewBox="0 0 300 300" aria-hidden="true">
-          <g id="crack-lines"></g>
-          <circle id="crack-core" cx="150" cy="150" r="3"/>
+        <svg class="crack" viewBox="0 0 320 320" aria-hidden="true">
+          <defs>
+            <filter id="ckSoft" x="-70%" y="-70%" width="240%" height="240%">
+              <feGaussianBlur stdDeviation="4"/>
+            </filter>
+            <filter id="ckWide" x="-90%" y="-90%" width="280%" height="280%">
+              <feGaussianBlur stdDeviation="16"/>
+            </filter>
+          </defs>
+          <g id="ck-bloom"></g>
+          <g id="ck-glow"></g>
+          <g id="ck-void"></g>
+          <g id="ck-rim"></g>
+          <g id="ck-shards"></g>
+          <g id="ck-hair"></g>
+          <g id="ck-core"></g>
         </svg>
       </div>
 
